@@ -59,7 +59,8 @@ public class LikeablePersonService {
         }
     }
     @Transactional(readOnly = false)
-    public void delete(LikeablePerson likeablePerson){
+    public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson){
         this.likeablePersonRepository.delete(likeablePerson);
+        return RsData.of("S-1", "인스타유저(%s) 삭제 성공".formatted(likeablePerson.getToInstaMemberUsername()));
     }
 }
