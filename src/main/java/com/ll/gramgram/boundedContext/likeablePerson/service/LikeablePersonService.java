@@ -9,6 +9,7 @@ import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +51,7 @@ public class LikeablePersonService {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
     public LikeablePerson getLikeablePerson(Long id){
-        Optional<LikeablePerson> likeablePerson = this.likeablePersonRepository.findById(id);
+        Optional<LikeablePerson> likeablePerson = likeablePersonRepository.findById(id);
         if(likeablePerson.isPresent()){
             return likeablePerson.get();
         }
@@ -58,9 +59,12 @@ public class LikeablePersonService {
             throw new RuntimeException("대상을 찾을 수 없습니다.");
         }
     }
-    @Transactional(readOnly = false)
-    public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson){
-        this.likeablePersonRepository.delete(likeablePerson);
+    @Transactional
+    public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson, Member member){
+        if(!likeablePerson.getFromInstaMember().getId().equals(member.getInstaMember().getId())){
+            return RsData.of("F-1", "권한이 없습니다.");
+        }
+        likeablePersonRepository.delete(likeablePerson);
         return RsData.of("S-1", "인스타유저(%s) 삭제 성공".formatted(likeablePerson.getToInstaMemberUsername()));
     }
 }
