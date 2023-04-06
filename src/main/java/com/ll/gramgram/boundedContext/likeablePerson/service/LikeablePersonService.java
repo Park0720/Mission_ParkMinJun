@@ -51,13 +51,7 @@ public class LikeablePersonService {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
     public LikeablePerson getLikeablePerson(Long id){
-        Optional<LikeablePerson> likeablePerson = likeablePersonRepository.findById(id);
-        if(likeablePerson.isPresent()){
-            return likeablePerson.get();
-        }
-        else{
-            throw new RuntimeException("대상을 찾을 수 없습니다.");
-        }
+        return likeablePersonRepository.findById(id).orElseThrow();
     }
     @Transactional
     public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson, Member member){
