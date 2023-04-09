@@ -50,8 +50,8 @@ public class LikeablePersonService {
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
-    public LikeablePerson getLikeablePerson(Long id){
-        return likeablePersonRepository.findById(id).orElseThrow();
+    public Optional<LikeablePerson> getLikeablePerson(Long id){
+        return likeablePersonRepository.findById(id);
     }
     @Transactional
     public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson, Member member){
