@@ -1,4 +1,4 @@
-<html layout:decorate="~{usr/layout/layout.html}">
+<html layout:decorate="~{usr/layout/layout.html}" xmlns:layout="http://www.w3.org/1999/xhtml">
 
 <head>
     <title>당신이 좋아하는 사람들</title>
@@ -6,7 +6,7 @@
 
 <body>
 
-<mai layout:fragment="main">
+<main layout:fragment="main">
     <th:block th:unless="${@rq.member.hasConnectedInstaMember}">
         <div>먼저 본인의 인스타그램 아이디를 입력해주세요.</div>
 
@@ -25,7 +25,7 @@
             </li>
         </ul>
     </th:block>
-</mai>
+</main>
 </body>
 
 </html>
