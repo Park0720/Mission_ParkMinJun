@@ -178,4 +178,41 @@ public class LikeablePersonControllerTests {
 
         assertThat(likeablePersonService.getLikeablePerson(1L).isPresent()).isEqualTo(false);
     }
+    @Test
+    @DisplayName("호감삭제(없는 거 삭제, 삭제가 안되어야 함)")
+    @WithUserDetails("user3")
+    void t007() throws Exception{
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(delete("/likeablePerson/100")
+                        .with(csrf())
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().is3xxRedirection())
+                ;
+    }
+    @Test
+    @DisplayName("호감삭제(없는 거 삭제, 삭제가 안되어야 함)")
+    @WithUserDetails("user2")
+    void t008() throws Exception{
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(delete("/likeablePerson/1")
+                        .with(csrf())
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("delete"))
+                .andExpect(status().is3xxRedirection())
+        ;
+        assertThat(likeablePersonService.getLikeablePerson(1L).isPresent()).isEqualTo(true);
+    }
 }

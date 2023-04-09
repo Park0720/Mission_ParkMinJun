@@ -55,11 +55,11 @@ public class LikeablePersonService {
     }
     @Transactional
     public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson, Member member){
-        if(!likeablePerson.getFromInstaMember().getId().equals(member.getInstaMember().getId())){
-            return RsData.of("F-1", "권한이 없습니다.");
-        }
         if(likeablePerson == null){
-            return RsData.of("F-2", "이미 삭제된 내역이 있습니다.");
+            return RsData.of("F-1", "이미 삭제된 내역이 있습니다.");
+        }
+        if(!likeablePerson.getFromInstaMember().getId().equals(member.getInstaMember().getId())){
+            return RsData.of("F-2", "권한이 없습니다.");
         }
         likeablePersonRepository.delete(likeablePerson);
         return RsData.of("S-1", "인스타유저(%s) 삭제 성공".formatted(likeablePerson.getToInstaMemberUsername()));
