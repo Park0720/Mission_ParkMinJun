@@ -30,7 +30,9 @@ public class LikeablePersonService {
         if (member.getInstaMember().getUsername().equals(username)) {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
-
+        if (member.getInstaMember().getFromLikeablePeople().size()==10){
+            return RsData.of("F-3","10명 이상 호감 등록을 할 수 없습니다.");
+        }
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
