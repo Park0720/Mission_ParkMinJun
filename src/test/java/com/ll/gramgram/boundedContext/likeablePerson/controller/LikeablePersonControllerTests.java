@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -231,13 +232,13 @@ public class LikeablePersonControllerTests {
     }
     @Test
     @DisplayName("호감표시(중복 호감은 안돼)")
-    @WithUserDetails("user3")
+    @WithUserDetails("user4")
     void t0010() throws Exception{
         // WHEN
         ResultActions resultActions = mvc
                 .perform(post("/likeablePerson/add")
                         .with(csrf()) // CSRF 키 생성
-                        .param("username", "insta_user4")
+                        .param("username", "insta_user7")
                         .param("attractiveTypeCode", "1")
                 )
                 .andDo(print());
@@ -248,5 +249,26 @@ public class LikeablePersonControllerTests {
                 .andExpect(handler().methodName("add"))
                 .andExpect(status().is4xxClientError())
         ;
+    }
+    @Test
+    @DisplayName("호감표시(중복 호감은 안되는데 사유 다르면 수정해줄게)")
+    @WithUserDetails("user4")
+    void t0011() throws Exception{
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(post("/likeablePerson/add")
+                        .with(csrf()) // CSRF 키 생성
+                        .param("username", "insta_user7")
+                        .param("attractiveTypeCode", "2")
+                )
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(handler().handlerType(LikeablePersonController.class))
+                .andExpect(handler().methodName("add"))
+                .andExpect(status().is3xxRedirection())
+        ;
+        assertThat(likeablePersonService.findByFromInstaMemberIdAndToInstaMemberId(2L, 7L).get().getAttractiveTypeCode()==2);
     }
 }
