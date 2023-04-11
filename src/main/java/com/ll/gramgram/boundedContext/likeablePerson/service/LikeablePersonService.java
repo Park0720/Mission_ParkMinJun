@@ -35,11 +35,6 @@ public class LikeablePersonService {
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
 
-//        LikeablePerson likeablePerson2 = getLikeablePerson(member.getId()).orElse(null);
-//        if(fromInstaMember.getId().equals(likeablePerson2.getFromInstaMember().getId()) && toInstaMember.getId().equals(likeablePerson2.getToInstaMember().getId())){
-//            return RsData.of("F-4", "이미 등록된 호감표시입니다.");
-//        }
-
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
                 .fromInstaMember(fromInstaMember) // 호감을 표시하는 사람의 인스타 멤버
@@ -48,6 +43,11 @@ public class LikeablePersonService {
                 .toInstaMemberUsername(toInstaMember.getUsername()) // 중요하지 않음
                 .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
                 .build();
+
+        LikeablePerson checklikeablePerson = findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null);
+        if(checklikeablePerson != null){
+            return RsData.of("F-4", "이미 등록된 호감표시입니다.");
+        }
 
         likeablePersonRepository.save(likeablePerson); // 저장
 
@@ -66,6 +66,9 @@ public class LikeablePersonService {
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
+    public Optional<LikeablePerson> findByFromInstaMemberIdAndToInstaMemberId(Long fromInstaMemberId, Long toInstaMemberId){
+        return likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMemberId, toInstaMemberId);
+    }
 
     @Transactional
     public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson, Member member) {
@@ -77,14 +80,5 @@ public class LikeablePersonService {
         }
         likeablePersonRepository.delete(likeablePerson);
         return RsData.of("S-1", "인스타유저(%s) 삭제 성공".formatted(likeablePerson.getToInstaMemberUsername()));
-    }
-    public RsData<LikeablePerson> checkLikeablePersonTwice(Member member, LikeablePerson likeablePerson, InstaMember instaMember, List<LikeablePerson> fromLikeablePeople){
-        if ((likeablePerson == getLikeablePerson(member.getId()).orElse(null))){
-            return RsData.of("S-1", "등록 가능");
-        }
-        if (member.getInstaMember().getId().equals(likeablePerson.getFromInstaMember().getId())){
-            return RsData.of("S-1", "등록 가능");
-        }
-        return RsData.of("S-1", "등록 가능");
     }
 }

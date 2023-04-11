@@ -10,7 +10,7 @@
 ### 목표
 
 ---
-- [ ] 케이스 4 : 한명의 인스타회원이 다른 인스타회원에게 중복으로 호감표시를 할 수 없습니다.
+- [x] 케이스 4 : 한명의 인스타회원이 다른 인스타회원에게 중복으로 호감표시를 할 수 없습니다.
   1. 예를 들어 본인의 인스타ID가 aaaa, 상대의 인스타ID가 bbbb 라고 하자.
 
   1. aaaa 는 bbbb 에게 호감을 표시한다.(사유 : 외모)
@@ -67,10 +67,15 @@
 **호감표시 시 예외처리 케이스 3가지 처리**
 
 ---
-- 케이스 5부터 진행
+- **케이스 5**
 - 호감등록한 사람이 10명인 상태로 진행하려고 NotProd에 insta_user3이 호감표시한 사람 10명으로 증가 시킴
 - ```member.getInstaMember().getFromLikeablePeople().size()==10```일 경우 F-3 실패코드 반환 후 historyback 구현
 - 테스트케이스에서는 10명 이상일 경우 추가가 안되어야 하므로 ```is4xxClientError())``` 반환
+- **케이스 4**
+- LikeablePersonService의 Like에서 중복체크 하려고 했는데 프로그램 실행조차 안됨
+- 아마 NotProd 생성 시에 오류가 발생해서 안되는 것 같음
+- LikeablePersonRepository에서 ```findByFromInstaMemberIdAndToInstaMemberId```로 LikeablePerson 가져온 뒤
+- add시도 할 때 체크해서 같은 값이 있으면 F-4 실패코드 반환 하도록 구현
 ---
 **네이버 로그인**
 
