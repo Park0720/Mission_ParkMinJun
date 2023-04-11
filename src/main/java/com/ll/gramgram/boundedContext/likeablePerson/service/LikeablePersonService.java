@@ -23,15 +23,15 @@ public class LikeablePersonService {
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
-        if ( member.hasConnectedInstaMember() == false ) {
+        if (member.hasConnectedInstaMember() == false) {
             return RsData.of("F-2", "먼저 본인의 인스타그램 아이디를 입력해야 합니다.");
         }
 
         if (member.getInstaMember().getUsername().equals(username)) {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
-        if (member.getInstaMember().getFromLikeablePeople().size()==10){
-            return RsData.of("F-3","10명 이상 호감 등록을 할 수 없습니다.");
+        if (member.getInstaMember().getFromLikeablePeople().size() == 10) {
+            return RsData.of("F-3", "10명 이상 호감 등록을 할 수 없습니다.");
         }
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
@@ -55,19 +55,20 @@ public class LikeablePersonService {
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
+    public Optional<LikeablePerson> getLikeablePerson(Long id) {
+        return likeablePersonRepository.findById(id);
+    }
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
-    public Optional<LikeablePerson> getLikeablePerson(Long id){
-        return likeablePersonRepository.findById(id);
-    }
+
     @Transactional
-    public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson, Member member){
-        if(likeablePerson == null){
+    public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson, Member member) {
+        if (likeablePerson == null) {
             return RsData.of("F-1", "이미 삭제된 내역이 있습니다.");
         }
-        if(!likeablePerson.getFromInstaMember().getId().equals(member.getInstaMember().getId())){
+        if (!likeablePerson.getFromInstaMember().getId().equals(member.getInstaMember().getId())) {
             return RsData.of("F-2", "권한이 없습니다.");
         }
         likeablePersonRepository.delete(likeablePerson);
