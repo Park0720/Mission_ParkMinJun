@@ -41,8 +41,6 @@ public class NotProd {
             likeablePersonService.like(memberUser3, "insta_user9", 2);
             likeablePersonService.like(memberUser3, "insta_user10", 2);
             likeablePersonService.like(memberUser3, "insta_user11", 2);
-            likeablePersonService.like(memberUser3, "insta_user12", 2);
-
         };
     }
 }

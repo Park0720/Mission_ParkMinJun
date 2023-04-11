@@ -9,7 +9,6 @@ import com.ll.gramgram.boundedContext.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +34,11 @@ public class LikeablePersonService {
         }
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+
+//        LikeablePerson likeablePerson2 = getLikeablePerson(member.getId()).orElse(null);
+//        if(fromInstaMember.getId().equals(likeablePerson2.getFromInstaMember().getId()) && toInstaMember.getId().equals(likeablePerson2.getToInstaMember().getId())){
+//            return RsData.of("F-4", "이미 등록된 호감표시입니다.");
+//        }
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
@@ -73,5 +77,14 @@ public class LikeablePersonService {
         }
         likeablePersonRepository.delete(likeablePerson);
         return RsData.of("S-1", "인스타유저(%s) 삭제 성공".formatted(likeablePerson.getToInstaMemberUsername()));
+    }
+    public RsData<LikeablePerson> checkLikeablePersonTwice(Member member, LikeablePerson likeablePerson, InstaMember instaMember, List<LikeablePerson> fromLikeablePeople){
+        if ((likeablePerson == getLikeablePerson(member.getId()).orElse(null))){
+            return RsData.of("S-1", "등록 가능");
+        }
+        if (member.getInstaMember().getId().equals(likeablePerson.getFromInstaMember().getId())){
+            return RsData.of("S-1", "등록 가능");
+        }
+        return RsData.of("S-1", "등록 가능");
     }
 }
