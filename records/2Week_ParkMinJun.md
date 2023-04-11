@@ -28,7 +28,7 @@
 
   1. 이 경우에는 처리되면 안된다.(rq.historyBack)
 
-- [ ] 케이스 6 : 케이스 4 가 발생했을 때 기존의 사유와 다른 사유로 호감을 표시하는 경우에는 성공으로 처리한다.
+- [x] 케이스 6 : 케이스 4 가 발생했을 때 기존의 사유와 다른 사유로 호감을 표시하는 경우에는 성공으로 처리한다.
 
   1. 예를 들어 본인의 인스타ID가 aaaa, 상대의 인스타ID가 bbbb 라고 하자.
 
@@ -38,11 +38,11 @@
 
   1. 이 경우에는 새 호감상대로 등록되지 않고, 기존 호감표시에서 사유만 수정된다.
 
-  - [ ] 외모 => 성격
+  - [x] 외모 => 성격
 
-  - [ ] resultCode=S-2
+  - [x] resultCode=S-2
 
-  - [ ] msg=bbbb 에 대한 호감사유를 외모에서 성격으로 변경합니다.
+  - [x] msg=bbbb 에 대한 호감사유를 외모에서 성격으로 변경합니다.
 
 
 ### 선택미션 - 네이버 로그인
@@ -67,15 +67,19 @@
 **호감표시 시 예외처리 케이스 3가지 처리**
 
 ---
-- **케이스 5**
+- **[케이스 5]**
 - 호감등록한 사람이 10명인 상태로 진행하려고 NotProd에 insta_user3이 호감표시한 사람 10명으로 증가 시킴
 - ```member.getInstaMember().getFromLikeablePeople().size()==10```일 경우 F-3 실패코드 반환 후 historyback 구현
 - 테스트케이스에서는 10명 이상일 경우 추가가 안되어야 하므로 ```is4xxClientError())``` 반환
-- **케이스 4**
+- **[케이스 4]**
 - LikeablePersonService의 Like에서 중복체크 하려고 했는데 프로그램 실행조차 안됨
 - 아마 NotProd 생성 시에 오류가 발생해서 안되는 것 같음
 - LikeablePersonRepository에서 ```findByFromInstaMemberIdAndToInstaMemberId```로 LikeablePerson 가져온 뒤
 - add시도 할 때 체크해서 같은 값이 있으면 F-4 실패코드 반환 하도록 구현
+- **[케이스 6]**
+- LikeablePerson에서 ```@Setter```추가 후 modifyDate 수정 및 attractiveTypeCode 수정
+- 메세지 출력과정에서 기존 호감사유를 저장해놓으려고 ```checkLikeablePersonAttractiveTypeName``` 생성 후 저장
+- 어찌저찌 성공하긴 했는데 서비스에서 모두 구현해도 되는 지 의문..?
 ---
 **네이버 로그인**
 

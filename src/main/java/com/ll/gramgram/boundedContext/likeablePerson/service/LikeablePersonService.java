@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +45,20 @@ public class LikeablePersonService {
                 .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
                 .build();
 
-        LikeablePerson checkLikeablePerson = findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null);
+        // likeablePerson 중에서 호감 발신자와 호감 수신자가 일치하는 것 가져오기
+        LikeablePerson checkLikeablePerson = likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null);
+        // 일치하는 것이 있고
         if(checkLikeablePerson != null){
-            return RsData.of("F-4", "이미 등록된 호감표시입니다.");
+            // 호감사유도 일치하는 항목이 있다면
+            if(checkLikeablePerson.getAttractiveTypeCode()==attractiveTypeCode) {
+                return RsData.of("F-4", "이미 등록된 호감표시입니다.");
+            }
+            // 기존 호감사유
+            String checkLikeablePersonAttractiveTypeCodeName = checkLikeablePerson.getAttractiveTypeDisplayName();
+            // 수정일시 변경 및 호감사유 변경
+            checkLikeablePerson.setModifyDate(LocalDateTime.now());
+            checkLikeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+            return RsData.of("S-2", "%s에 대한 호감사유를 %s에서 %s로 변경합니다.".formatted(toInstaMember.getUsername(),checkLikeablePersonAttractiveTypeCodeName,likeablePerson.getAttractiveTypeDisplayName()));
         }
 
         likeablePersonRepository.save(likeablePerson); // 저장
@@ -66,10 +78,6 @@ public class LikeablePersonService {
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
-    public Optional<LikeablePerson> findByFromInstaMemberIdAndToInstaMemberId(Long fromInstaMemberId, Long toInstaMemberId){
-        return likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMemberId, toInstaMemberId);
-    }
-
     @Transactional
     public RsData<LikeablePerson> deleteLikeablePerson(LikeablePerson likeablePerson, Member member) {
         if (likeablePerson == null) {
