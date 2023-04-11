@@ -65,6 +65,8 @@
   - 아마 NotProd 생성 시에 오류가 발생해서 안되는 것 같음
   - 강사님 테스트 코드 보며 기존에 있는 호감표시를 어떻게 가져올 지 생각함
   - LikeablePersonRepository에서 ```findByFromInstaMemberIdAndToInstaMemberId```로 LikeablePerson 가져온 뒤 add시도 할 때 체크해서 같은 값이 있으면 F-4 실패코드 반환 하도록 구현
+  - 처음 생각했던 방법이랑 구현한 방식이 비슷한데 ```if(checkLikeablePerson != null)```이 부분에서 성공 실패 여부가 갈린 거 같음
+    - 기존 구현 방식에서 저 부분이 없었을 때 프로그램 구동 자체가 안됨
 - **케이스 6 : 케이스 4 가 발생했을 때 기존의 사유와 다른 사유로 호감을 표시하는 경우에는 성공으로 처리한다.**
   - LikeablePerson에서 ```@Setter```추가 후 modifyDate 수정 및 attractiveTypeCode 수정
   - 메세지 출력과정에서 기존 호감사유를 저장해놓으려고 ```checkLikeablePersonAttractiveTypeCodeName``` 생성 후 저장
