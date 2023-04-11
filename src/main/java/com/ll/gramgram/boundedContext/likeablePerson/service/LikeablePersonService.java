@@ -44,8 +44,8 @@ public class LikeablePersonService {
                 .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
                 .build();
 
-        LikeablePerson checklikeablePerson = findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null);
-        if(checklikeablePerson != null){
+        LikeablePerson checkLikeablePerson = findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null);
+        if(checkLikeablePerson != null){
             return RsData.of("F-4", "이미 등록된 호감표시입니다.");
         }
 
