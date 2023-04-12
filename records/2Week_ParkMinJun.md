@@ -55,8 +55,7 @@
 ---
 - **케이스 5 : 한명의 인스타회원이 11명 이상의 호감상대를 등록 할 수 없습니다.**
   - 호감등록한 사람이 10명인 상태로 진행하려고 NotProd에 insta_user3이 호감표시한 사람 10명으로 증가 시킴
-  - ```member.getInstaMember().getFromLikeablePeople().size()==10```일 경우 F-3 실패코드 반환 후 historyback 구현
-  - 테스트케이스에서는 10명 이상일 경우 추가가 안되어야 하므로 ```is4xxClientError())``` 반환
+  - ```member.getInstaMember().getFromLikeablePeople().size()==10```일 경우 F-3 실패코드 반환
 - **케이스 4 : 한명의 인스타회원이 다른 인스타회원에게 중복으로 호감표시를 할 수 없습니다.**
   - LikeablePersonService의 Like에서 중복체크 하려고 시도
   - ```InstaMember fromInstaMember = member.getInstaMember();```
@@ -64,13 +63,15 @@
   프로그램 실행 자체가 안됨
   - 아마 NotProd 생성 시에 오류가 발생해서 안되는 것 같음
   - 강사님 테스트 코드 보며 기존에 있는 호감표시를 어떻게 가져올 지 생각함
-  - LikeablePersonRepository에서 ```findByFromInstaMemberIdAndToInstaMemberId```로 LikeablePerson 가져온 뒤 add시도 할 때 체크해서 같은 값이 있으면 F-4 실패코드 반환 하도록 구현
+  - LikeablePersonRepository에서 ```findByFromInstaMemberIdAndToInstaMemberId```로 LikeablePerson 가져온 뒤 add시도 할 때 체크해서 같은 값이 있으면 F-4 실패코드 반환
   - 처음 생각했던 방법이랑 구현한 방식이 비슷한데 ```if(checkLikeablePerson != null)```이 부분에서 성공 실패 여부가 갈린 거 같음
-    - 기존 구현 방식에서 저 부분이 없었을 때 프로그램 구동 자체가 안됨
+    - 처음 하려고 했던 코드에서 저 부분이 없었을 때 프로그램 구동 자체가 안됨
+    - 아마 저장하기 전에 찾아서 쓰려고 해서 오류가 난 것 같음
 - **케이스 6 : 케이스 4 가 발생했을 때 기존의 사유와 다른 사유로 호감을 표시하는 경우에는 성공으로 처리한다.**
+  - 기존 호감사유와 새로 등록하려는 호감사유를 체크해서 다르면 케이스 6으로 빠지도록 처리
   - LikeablePerson에서 ```@Setter```추가 후 modifyDate 수정 및 attractiveTypeCode 수정
   - 메세지 출력과정에서 기존 호감사유를 저장해놓으려고 ```checkLikeablePersonAttractiveTypeCodeName``` 생성 후 저장
-  - 어찌저찌 성공하긴 했는데 서비스에서 모두 구현해도 되는 지 의문..?
+  - ```fromInstaMemberId```와 ```toInstaMemberId```가 기존에 있던 likeablePerson 데이터와 일치하는 항목이 있고, 호감사유가 기존과 다르면 S-2 성공코드 반환
 ---
 **네이버 로그인**
 
@@ -94,8 +95,11 @@
 **호감표시 시 예외처리 케이스 3가지 처리**
 
 ---
-- 해당 내용을 서비스에서 전부 구현하는 것이 맞는 지 모르겠음
+- LikeablePersonRepository에서 값을 가져올 때 내가 구현한 방법으로 처리해도 되는 지는 모르겠음
+- 일단 LikeablePerson에서 fromInstaMemberUsername, toInstaMemberUsername이 없어도 프로그램 정상 구동
 ---
 ### Refactoring
 
 ---
+- LikeablePersonService에서 ```RsData<LikeablePerson>``` -> ```RsData```로 변경하기
+- LikeablePersonService의 ```deleteLikeablePerson```에서 삭제할 유저 ```likeablePerson.getToInstaMemberUsername()``` -> ```likeablePerson.getToInstaMember().getUsername()``` 로 변경하기
