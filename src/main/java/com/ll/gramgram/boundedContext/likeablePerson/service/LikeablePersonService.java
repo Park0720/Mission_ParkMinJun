@@ -43,10 +43,10 @@ public class LikeablePersonService {
         LikeablePerson checkLikeablePerson = likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null);
         // 일치하는 것이 있으면 checkAlreadyLikeableOrModify 실행
         if (checkLikeablePerson != null) {
-            return checkAlreadyLikeableOrModify(username, attractiveTypeCode, checkLikeablePerson);
+            return checkAlreadyLikeableOrModify(toInstaMember, attractiveTypeCode, checkLikeablePerson);
         }
         if (checkLikeableMax(member)) {
-            return RsData.of("F-3", "호감표시는 최대 10개만 가능합니다.");
+            return RsData.of("F-4", "호감표시는 최대 10개만 가능합니다.");
         }
 
         LikeablePerson likeablePerson = LikeablePerson
@@ -93,11 +93,10 @@ public class LikeablePersonService {
         return false;
     }
 
-    public RsData checkAlreadyLikeableOrModify(String username, int attractiveTypeCode, LikeablePerson checkLikeablePerson) {
-        InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+    public RsData checkAlreadyLikeableOrModify(InstaMember toInstaMember, int attractiveTypeCode, LikeablePerson checkLikeablePerson) {
         // 호감사유가 일치하는 항목이 있으면
         if (checkLikeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
-            return RsData.of("F-4", "이미 등록된 호감표시입니다.");
+            return RsData.of("F-3", "이미 등록된 호감표시입니다.");
         }
         // 기존 호감사유
         String checkLikeablePersonAttractiveTypeName = checkLikeablePerson.getAttractiveTypeDisplayName();
