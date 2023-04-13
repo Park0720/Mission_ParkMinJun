@@ -104,5 +104,5 @@
 - [x] ```LikeablePersonService```에서 ```RsData<LikeablePerson>``` -> ```RsData```로 변경하기
 - [x] ```LikeablePersonService```의 ```deleteLikeablePerson```에서 삭제할 유저 ```likeablePerson.getToInstaMemberUsername()``` -> ```likeablePerson.getToInstaMember().getUsername()``` 로 변경하기
 ---
-코드 리뷰 후
+**코드 리뷰 후**
 - [x] ```like``` 메서드에서 기능을 다 구현하지 않고 기능 분산시키기
