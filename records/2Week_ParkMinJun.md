@@ -57,7 +57,7 @@
   - 호감등록한 사람이 10명인 상태로 진행하려고 ```NotProd```에 insta_user3이 호감표시한 사람 10명으로 증가 시킴
   - ```member.getInstaMember().getFromLikeablePeople().size()==10```일 경우 F-3 실패코드 반환
 - **케이스 4 : 한명의 인스타회원이 다른 인스타회원에게 중복으로 호감표시를 할 수 없습니다.**
-  - ```LikeablePersonService```의 ```Like```에서 중복체크 하려고 시도
+  - ```LikeablePersonService```의 ```like```에서 중복체크 하려고 시도
   - ```InstaMember fromInstaMember = member.getInstaMember();```
   , ```InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();``` 이 두 데이터로 기존에 가지고 있는 호감표시 체크 하려고 했으나
   프로그램 실행 자체가 안됨
@@ -101,5 +101,8 @@
 ### Refactoring
 
 ---
-- ```LikeablePersonService```에서 ```RsData<LikeablePerson>``` -> ```RsData```로 변경하기
-- ```LikeablePersonService```의 ```deleteLikeablePerson```에서 삭제할 유저 ```likeablePerson.getToInstaMemberUsername()``` -> ```likeablePerson.getToInstaMember().getUsername()``` 로 변경하기
+- [x] ```LikeablePersonService```에서 ```RsData<LikeablePerson>``` -> ```RsData```로 변경하기
+- [x] ```LikeablePersonService```의 ```deleteLikeablePerson```에서 삭제할 유저 ```likeablePerson.getToInstaMemberUsername()``` -> ```likeablePerson.getToInstaMember().getUsername()``` 로 변경하기
+---
+코드 리뷰 후
+- [x] ```like``` 메서드에서 기능을 다 구현하지 않고 기능 분산시키기
