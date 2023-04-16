@@ -29,13 +29,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        String oauthId = oAuth2User.getName();
-        if(oauthId.startsWith("{id=")){
-            oauthId=oauthId.replace("{id=","");
-            oauthId=oauthId.replace("}","");
-        }
-
         String providerTypeCode = userRequest.getClientRegistration().getRegistrationId().toUpperCase();
+
+        String oauthId = switch (providerTypeCode) {
+            case "NAVER" -> ((Map<String, String>) oAuth2User.getAttributes().get("response")).get("id");
+            default -> oAuth2User.getName();
+        };
 
         String username = providerTypeCode + "__%s".formatted(oauthId);
 
