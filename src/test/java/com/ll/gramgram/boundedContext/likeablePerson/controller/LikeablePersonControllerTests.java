@@ -153,7 +153,7 @@ public class LikeablePersonControllerTests {
         ;
     }
     @Test
-    @DisplayName("호감삭제")
+    @DisplayName("호감취소")
     @WithUserDetails("user3")
     void t006() throws Exception{
         // WHEN
@@ -166,14 +166,14 @@ public class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("delete"))
+                .andExpect(handler().methodName("cancel"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/likeablePerson/list**"));
 
         assertThat(likeablePersonService.getLikeablePerson(1L).isPresent()).isEqualTo(false);
     }
     @Test
-    @DisplayName("호감삭제(없는 거 삭제, 삭제가 안되어야 함)")
+    @DisplayName("호감취소(없는 거 취소, 취소가 안되어야 함)")
     @WithUserDetails("user3")
     void t007() throws Exception{
         // WHEN
@@ -186,12 +186,12 @@ public class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("delete"))
+                .andExpect(handler().methodName("cancel"))
                 .andExpect(status().is3xxRedirection())
                 ;
     }
     @Test
-    @DisplayName("호감삭제(없는 거 삭제, 삭제가 안되어야 함)")
+    @DisplayName("호감취소(권한이 없는 경우, 취소가 안됨)")
     @WithUserDetails("user2")
     void t008() throws Exception{
         // WHEN
@@ -204,7 +204,7 @@ public class LikeablePersonControllerTests {
         // THEN
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
-                .andExpect(handler().methodName("delete"))
+                .andExpect(handler().methodName("cancel"))
                 .andExpect(status().is3xxRedirection())
         ;
         assertThat(likeablePersonService.getLikeablePerson(1L).isPresent()).isEqualTo(true);
