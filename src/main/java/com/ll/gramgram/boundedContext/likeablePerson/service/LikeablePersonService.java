@@ -130,13 +130,18 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public RsData deleteLikeablePerson(LikeablePerson likeablePerson, Member member) {
+    public RsData cancelLikeablePerson(LikeablePerson likeablePerson, Member member) {
         if (likeablePerson == null) {
             return RsData.of("F-1", "이미 삭제된 내역이 있습니다.");
         }
         if (!likeablePerson.getFromInstaMember().getId().equals(member.getInstaMember().getId())) {
             return RsData.of("F-2", "권한이 없습니다.");
         }
+        // 너가 생성한 좋아요가 사라졌어.
+        likeablePerson.getFromInstaMember().removeFromLikeablePerson(likeablePerson);
+
+        // 너가 받은 좋아요가 사라졌어.
+        likeablePerson.getToInstaMember().removeToLikeablePerson(likeablePerson);
         likeablePersonRepository.delete(likeablePerson);
         return RsData.of("S-1", "인스타유저(%s) 삭제 성공".formatted(likeablePerson.getToInstaMember().getUsername()));
     }
