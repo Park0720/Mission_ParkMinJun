@@ -3,6 +3,7 @@ package com.ll.gramgram.boundedContext.home.controller;
 import com.ll.gramgram.base.rq.Rq;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +14,7 @@ import java.util.Enumeration;
 @RequiredArgsConstructor
 public class HomeController {
     private final Rq rq;
+
     @GetMapping("/")
     public String showMain() {
         return "usr/home/main";
@@ -20,6 +22,7 @@ public class HomeController {
 
     @GetMapping("/debugSession")
     @ResponseBody
+    @PreAuthorize("hasAuthority('admin')")
     public String showDebugSession(HttpSession session) {
         StringBuilder sb = new StringBuilder("Session content:\n");
 
@@ -32,8 +35,10 @@ public class HomeController {
 
         return sb.toString().replaceAll("\n", "<br>");
     }
+
     @GetMapping("/historyBackTest")
+    @PreAuthorize("hasAuthority('admin')")
     public String showHistoryBackTest(HttpSession session) {
-        return rq.historyBack("여기는 당신같은 사람이 오면 안돼요.");
+        return rq.historyBack("여기는 당신같은 사람이 오면 안되요.");
     }
 }
