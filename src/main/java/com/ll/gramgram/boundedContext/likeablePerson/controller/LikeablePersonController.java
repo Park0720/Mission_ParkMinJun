@@ -5,50 +5,51 @@ import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
-import com.ll.gramgram.boundedContext.member.entity.Member;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
-@RequestMapping("/likeablePerson")
+@RequestMapping("/usr/likeablePerson")
 @RequiredArgsConstructor
 public class LikeablePersonController {
     private final Rq rq;
     private final LikeablePersonService likeablePersonService;
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/add")
-    public String showAdd() {
-        return "usr/likeablePerson/add";
+    @GetMapping("/like")
+    public String showLike() {
+        return "usr/likeablePerson/like";
     }
 
     @AllArgsConstructor
     @Getter
-    public static class AddForm {
+    public static class LikeForm {
+        @NotBlank
+        @Size(min = 3, max = 30)
         private final String username;
+        @NotNull
+        @Min(1)
+        @Max(3)
         private final int attractiveTypeCode;
     }
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/add")
-    public String add(@Valid AddForm addForm) {
-        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
+    @PostMapping("/like")
+    public String like(@Valid LikeForm likeForm) {
+        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), likeForm.getUsername(), likeForm.getAttractiveTypeCode());
 
         if (createRsData.isFail()) {
             return rq.historyBack(createRsData);
         }
 
-        return rq.redirectWithMsg("/likeablePerson/list", createRsData);
+        return rq.redirectWithMsg("/usr/likeablePerson/list", createRsData);
     }
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
@@ -66,12 +67,47 @@ public class LikeablePersonController {
     }
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") Long id){
+    public String cancel(@PathVariable("id") Long id){
         LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElse(null);
-        RsData<LikeablePerson> deleteRsData = likeablePersonService.deleteLikeablePerson(likeablePerson, rq.getMember());
+        RsData deleteRsData = likeablePersonService.cancelLikeablePerson(likeablePerson, rq.getMember());
         if(deleteRsData.isFail()){
             rq.historyBack(deleteRsData);
         }
-        return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
+        return rq.redirectWithMsg("/usr/likeablePerson/list", deleteRsData);
+    }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{id}")
+    public String showModify(@PathVariable Long id, Model model) {
+        LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElseThrow();
+
+        RsData canModifyRsData = likeablePersonService.canModify(likeablePerson,rq.getMember());
+
+        if (canModifyRsData.isFail()) return rq.historyBack(canModifyRsData);
+
+        model.addAttribute("likeablePerson", likeablePerson);
+
+        return "usr/likeablePerson/modify";
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class ModifyForm {
+        @NotNull
+        @Min(1)
+        @Max(3)
+        private final int attractiveTypeCode;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{id}")
+    public String modify(@PathVariable Long id, @Valid ModifyForm modifyForm) {
+        LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElseThrow();
+
+        RsData<LikeablePerson> rsData = likeablePersonService.modify(modifyForm.getAttractiveTypeCode(), likeablePerson, rq.getMember());
+
+        if (rsData.isFail()){
+            return rq.historyBack(rsData);
+        }
+        return rq.redirectWithMsg("/usr/likeablePerson/list", rsData);
     }
 }
