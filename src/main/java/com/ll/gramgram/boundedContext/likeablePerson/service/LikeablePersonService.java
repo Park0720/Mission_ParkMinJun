@@ -30,12 +30,6 @@ public class LikeablePersonService {
         if (member.getInstaMember().getUsername().equals(username)) {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
-        // 리팩토링 전 코드
-        /*
-        if(member.getInstaMember().getFromLikeablePeople().size()==AppConfig.getLikeablePersonFromMax()){
-            return RsData.of("F-3", "호감표시는 최대 10개만 가능합니다.");
-        }
-         */
 
         InstaMember fromInstaMember = member.getInstaMember();
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
@@ -48,8 +42,8 @@ public class LikeablePersonService {
             if(checkAlreadyLikeableRsData.isFail()){
                 return RsData.of("F-4", "이미 등록된 호감표시입니다.");
             }
-            if(checkAlreadyLikeableRsData.getResultCode().equals("S-2")){
-                return modify(toInstaMember, attractiveTypeCode, checkLikeablePerson);
+            if(!checkAlreadyLikeableRsData.isFail()){
+                return modify(attractiveTypeCode, checkLikeablePerson);
             }
         }
         if (checkLikeableMax(member)) {
@@ -64,24 +58,7 @@ public class LikeablePersonService {
                 .toInstaMemberUsername(toInstaMember.getUsername()) // 중요하지 않음
                 .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
                 .build();
-        // 리팩토링 전 코드
-        /*
-        // likeablePerson 중에서 호감 발신자와 호감 수신자가 일치하는 것 가져오기
-        LikeablePerson checkLikeablePerson = likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null);
-        // 일치하는 것이 있고
-        if(checkLikeablePerson != null){
-            // 호감사유도 일치하는 항목이 있다면
-            if(checkLikeablePerson.getAttractiveTypeCode()==attractiveTypeCode) {
-                return RsData.of("F-4", "이미 등록된 호감표시입니다.");
-            }
-            // 기존 호감사유
-            String checkLikeablePersonAttractiveTypeCodeName = checkLikeablePerson.getAttractiveTypeDisplayName();
-            // 수정일시 변경 및 호감사유 변경
-            checkLikeablePerson.setModifyDate(LocalDateTime.now());
-            checkLikeablePerson.setAttractiveTypeCode(attractiveTypeCode);
-            return RsData.of("S-2", "%s에 대한 호감사유를 %s에서 %s로 변경합니다.".formatted(toInstaMember.getUsername(),checkLikeablePersonAttractiveTypeCodeName,likeablePerson.getAttractiveTypeDisplayName()));
-        }
-         */
+
         likeablePersonRepository.save(likeablePerson); // 저장
 
         // 너가 좋아하는 호감표시 생겼어.
@@ -100,21 +77,29 @@ public class LikeablePersonService {
         return false;
     }
 
-    public RsData checkAlreadyLikeable(int attractiveTypeCode, LikeablePerson checkLikeablePerson) {
+    public RsData<LikeablePerson> checkAlreadyLikeable(int attractiveTypeCode, LikeablePerson checkLikeablePerson) {
         // 호감사유가 일치하는 항목이 있으면
         if (checkLikeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
             return RsData.of("F-3", "이미 등록된 호감표시입니다.");
         }
         return RsData.of("S-2","수정 가능합니다.");
     }
-    public RsData modify(InstaMember toInstaMember, int attractiveTypeCode, LikeablePerson checkLikeablePerson){
+    @Transactional
+    public RsData<LikeablePerson> modify(int attractiveTypeCode, LikeablePerson checkLikeablePerson){
         // 기존 호감사유
         String checkLikeablePersonAttractiveTypeName = checkLikeablePerson.getAttractiveTypeDisplayName();
+
+        if (checkLikeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
+            return RsData.of("F-3", "이미 등록된 호감표시입니다.");
+        }
+
         // 호감사유 변경
         checkLikeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+
         // 변경 후 호감사유
         String modifyLikeablePersonAttractiveTypeName = checkLikeablePerson.getAttractiveTypeDisplayName();
-        return RsData.of("S-2", "%s에 대한 호감사유를 %s에서 %s로 변경합니다.".formatted(toInstaMember.getUsername(), checkLikeablePersonAttractiveTypeName, modifyLikeablePersonAttractiveTypeName));
+
+        return RsData.of("S-2", "호감사유를 %s에서 %s로 변경합니다.".formatted(checkLikeablePersonAttractiveTypeName, modifyLikeablePersonAttractiveTypeName), checkLikeablePerson);
     }
 
     public Optional<LikeablePerson> getLikeablePerson(Long id) {
@@ -142,7 +127,9 @@ public class LikeablePersonService {
 
         // 너가 받은 좋아요가 사라졌어.
         likeablePerson.getToInstaMember().removeToLikeablePerson(likeablePerson);
+
         likeablePersonRepository.delete(likeablePerson);
+
         return RsData.of("S-1", "인스타유저(%s) 삭제 성공".formatted(likeablePerson.getToInstaMember().getUsername()));
     }
 }

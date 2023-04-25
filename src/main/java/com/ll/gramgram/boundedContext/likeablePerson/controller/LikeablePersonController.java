@@ -69,4 +69,32 @@ public class LikeablePersonController {
         }
         return rq.redirectWithMsg("/likeablePerson/list", deleteRsData);
     }
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{id}")
+    public String showModify(@PathVariable Long id, Model model) {
+        LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElseThrow();
+
+        model.addAttribute("likeablePerson", likeablePerson);
+
+        return "usr/likeablePerson/modify";
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public static class ModifyForm {
+        private final int attractiveTypeCode;
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify/{id}")
+    public String modify(@PathVariable Long id, @Valid ModifyForm modifyForm) {
+        LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElseThrow();
+
+        RsData<LikeablePerson> rsData = likeablePersonService.modify(modifyForm.getAttractiveTypeCode(), likeablePerson);
+
+        if (rsData.isFail()){
+            return rq.historyBack(rsData);
+        }
+        return rq.redirectWithMsg("/likeablePerson/list", rsData);
+    }
 }
