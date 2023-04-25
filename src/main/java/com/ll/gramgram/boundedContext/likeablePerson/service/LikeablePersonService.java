@@ -43,7 +43,7 @@ public class LikeablePersonService {
                 return RsData.of("F-4", "이미 등록된 호감표시입니다.");
             }
             if(!checkAlreadyLikeableRsData.isFail()){
-                return modify(attractiveTypeCode, checkLikeablePerson);
+                return modify(attractiveTypeCode, checkLikeablePerson, member);
             }
         }
         if (checkLikeableMax(member)) {
@@ -84,8 +84,17 @@ public class LikeablePersonService {
         }
         return RsData.of("S-2","수정 가능합니다.");
     }
+    public RsData<LikeablePerson> canModify(LikeablePerson checkLikeablePerson, Member member){
+        if (checkLikeablePerson == null) {
+            return RsData.of("F-1", "이미 삭제된 내역이 있습니다.");
+        }
+        if (!checkLikeablePerson.getFromInstaMember().getId().equals(member.getInstaMember().getId())) {
+            return RsData.of("F-2", "권한이 없습니다.");
+        }
+        return RsData.of("S-1", "수정 가능");
+    }
     @Transactional
-    public RsData<LikeablePerson> modify(int attractiveTypeCode, LikeablePerson checkLikeablePerson){
+    public RsData<LikeablePerson> modify(int attractiveTypeCode, LikeablePerson checkLikeablePerson, Member member){
         // 기존 호감사유
         String checkLikeablePersonAttractiveTypeName = checkLikeablePerson.getAttractiveTypeDisplayName();
 

@@ -5,6 +5,7 @@ import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
+import com.ll.gramgram.boundedContext.member.entity.Member;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -74,6 +75,10 @@ public class LikeablePersonController {
     public String showModify(@PathVariable Long id, Model model) {
         LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElseThrow();
 
+        RsData canModifyRsData = likeablePersonService.canModify(likeablePerson,rq.getMember());
+
+        if (canModifyRsData.isFail()) return rq.historyBack(canModifyRsData);
+
         model.addAttribute("likeablePerson", likeablePerson);
 
         return "usr/likeablePerson/modify";
@@ -90,7 +95,7 @@ public class LikeablePersonController {
     public String modify(@PathVariable Long id, @Valid ModifyForm modifyForm) {
         LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElseThrow();
 
-        RsData<LikeablePerson> rsData = likeablePersonService.modify(modifyForm.getAttractiveTypeCode(), likeablePerson);
+        RsData<LikeablePerson> rsData = likeablePersonService.modify(modifyForm.getAttractiveTypeCode(), likeablePerson, rq.getMember());
 
         if (rsData.isFail()){
             return rq.historyBack(rsData);
