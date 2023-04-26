@@ -129,7 +129,9 @@ public class LikeablePersonService {
         if (likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
             return RsData.of("F-3", "기존 호감사유와 다른 호감사유를 선택해주세요.");
         }
-
+        if(!now().isAfter(likeablePerson.getModifyDate().toLocalTime().plusHours(AppConfig.getCanModifyHourTime()))) {
+            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(calDiffTime(likeablePerson)));
+        }
         // 호감사유 변경
         modifyAttractiveTypeCode(likeablePerson, attractiveTypeCode);
 
