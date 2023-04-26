@@ -22,12 +22,22 @@ public class HomeController {
     private final InstaMemberService instaMemberService;
     @GetMapping("/")
     public String showMain() {
-        return "usr/home/main";
+        if (rq.isLogout()) return "redirect:/usr/member/login";
+
+        return "redirect:/usr/member/me";
+    }
+
+    @GetMapping("/usr/home/about")
+    public String showAbout() {
+        return "usr/home/about";
     }
     @GetMapping("/{instaID}")
     public String showMember(@PathVariable String instaID) {
-        InstaMember instaMember = instaMemberService.findByUsername(instaID).orElseThrow();
-        return "usr/instaMember/memberinfo";
+        Optional<InstaMember> opinstaMember = instaMemberService.findByUsername(instaID);
+        if (opinstaMember.isPresent()) {
+            return "usr/instaMember/memberinfo";
+        }
+        return "error/nodata";
     }
 
     @GetMapping("/usr/debugSession")
