@@ -104,7 +104,7 @@ public class LikeablePersonController {
     public String modify(@PathVariable Long id, @Valid ModifyForm modifyForm) {
         LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElseThrow();
 
-        RsData<LikeablePerson> rsData = likeablePersonService.modify(modifyForm.getAttractiveTypeCode(), likeablePerson, rq.getMember());
+        RsData<LikeablePerson> rsData = likeablePersonService.modify(modifyForm.getAttractiveTypeCode(), likeablePerson);
 
         if (rsData.isFail()){
             return rq.historyBack(rsData);

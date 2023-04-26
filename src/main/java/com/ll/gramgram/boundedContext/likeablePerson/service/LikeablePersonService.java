@@ -31,6 +31,17 @@ public class LikeablePersonService {
     private final InstaMemberService instaMemberService;
     private final ApplicationEventPublisher publisher;
 
+    public Optional<LikeablePerson> getLikeablePerson(Long id) {
+        return likeablePersonRepository.findById(id);
+    }
+
+    public Optional<LikeablePerson> findByFromInstaMemberIdAndToInstaMemberId(Long fromInstaMemberId, Long toInstaMemberId) {
+        return likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMemberId, toInstaMemberId);
+    }
+
+    public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
+        return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
+    }
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
         if (!member.hasConnectedInstaMember()) {
@@ -48,12 +59,12 @@ public class LikeablePersonService {
         LikeablePerson checkLikeablePerson = likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMember.getId(), toInstaMember.getId()).orElse(null);
         // 일치하는 것이 있으면 checkAlreadyLikeableOrModify 실행
         if (checkLikeablePerson != null) {
-            RsData checkAlreadyLikeableRsData = checkAlreadyLikeable(attractiveTypeCode, checkLikeablePerson);
+            RsData<LikeablePerson> checkAlreadyLikeableRsData = checkAlreadyLikeable(attractiveTypeCode, checkLikeablePerson);
             if(checkAlreadyLikeableRsData.isFail()){
-                return RsData.of("F-4", "이미 등록된 호감표시입니다.");
+                return RsData.of("F-4", "이미 등록된 호감표시입니다.\n 기존 호감사유와 다른 호감사유를 선택해주세요.");
             }
             if(!checkAlreadyLikeableRsData.isFail()){
-                return modify(attractiveTypeCode, checkLikeablePerson, member);
+                return modify(attractiveTypeCode, checkLikeablePerson);
             }
         }
         if (checkLikeableMax(member)) {
@@ -92,10 +103,11 @@ public class LikeablePersonService {
     public RsData<LikeablePerson> checkAlreadyLikeable(int attractiveTypeCode, LikeablePerson likeablePerson) {
         // 호감사유가 일치하는 항목이 있으면
         if (likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
-            return RsData.of("F-3", "이미 등록된 호감표시입니다.");
+            return RsData.of("F-3", "이미 같은 데이터가 있습니다.");
         }
         return RsData.of("S-2","수정 가능합니다.");
     }
+
     public RsData<LikeablePerson> canModify(LikeablePerson likeablePerson, Member member){
         if (likeablePerson == null) {
             return RsData.of("F-1", "이미 삭제된 내역이 있습니다.");
@@ -108,20 +120,14 @@ public class LikeablePersonService {
         }
         return RsData.of("S-1", "수정 가능");
     }
-    public LocalTime calDiffTime(LikeablePerson likeablePerson){
-        Duration diff = Duration.between(now(),likeablePerson.getModifyDate().toLocalTime().plusHours(AppConfig.getCanModifyHourTime()));
-        long hour = diff.toHours();
-        long min = diff.toMinutes() - hour*60;
-        long sec = diff.toSeconds() - hour*3600-min*60;
-        return LocalTime.of((int) hour, (int)min, (int)sec);
-    }
+
     @Transactional
-    public RsData<LikeablePerson> modify(int attractiveTypeCode, LikeablePerson likeablePerson, Member member){
+    public RsData<LikeablePerson> modify(int attractiveTypeCode, LikeablePerson likeablePerson){
         // 기존 호감사유
         String checkLikeablePersonAttractiveTypeName = likeablePerson.getAttractiveTypeDisplayName();
 
         if (likeablePerson.getAttractiveTypeCode() == attractiveTypeCode) {
-            return RsData.of("F-3", "이미 등록된 호감표시입니다.");
+            return RsData.of("F-3", "기존 호감사유와 다른 호감사유를 선택해주세요.");
         }
 
         // 호감사유 변경
@@ -132,6 +138,7 @@ public class LikeablePersonService {
 
         return RsData.of("S-2", "호감사유를 %s에서 %s로 변경합니다.".formatted(checkLikeablePersonAttractiveTypeName, modifyLikeablePersonAttractiveTypeName), likeablePerson);
     }
+
     private void modifyAttractiveTypeCode(LikeablePerson likeablePerson, int attractiveTypeCode) {
         int oldAttractiveTypeCode = likeablePerson.getAttractiveTypeCode();
         RsData rsData = likeablePerson.updateAttractiveTypeCode(attractiveTypeCode);
@@ -139,18 +146,6 @@ public class LikeablePersonService {
         if (rsData.isSuccess()) {
             publisher.publishEvent(new EventAfterModifyAttractiveType(this, likeablePerson, oldAttractiveTypeCode, attractiveTypeCode));
         }
-    }
-
-    public Optional<LikeablePerson> getLikeablePerson(Long id) {
-        return likeablePersonRepository.findById(id);
-    }
-
-    public Optional<LikeablePerson> findByFromInstaMemberIdAndToInstaMemberId(Long fromInstaMemberId, Long toInstaMemberId) {
-        return likeablePersonRepository.findByFromInstaMemberIdAndToInstaMemberId(fromInstaMemberId, toInstaMemberId);
-    }
-
-    public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
-        return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
 
     public RsData<LikeablePerson> canCancel(LikeablePerson likeablePerson, Member member){
@@ -165,6 +160,7 @@ public class LikeablePersonService {
         }
         return RsData.of("S-1", "삭제 가능");
     }
+
     @Transactional
     public RsData<LikeablePerson> cancel(LikeablePerson likeablePerson) {
         // 너가 생성한 좋아요가 사라졌어.
@@ -178,5 +174,13 @@ public class LikeablePersonService {
         likeablePersonRepository.delete(likeablePerson);
 
         return RsData.of("S-1", "인스타유저(%s) 삭제 성공".formatted(likeablePerson.getToInstaMember().getUsername()));
+    }
+
+    public LocalTime calDiffTime(LikeablePerson likeablePerson){
+        Duration diff = Duration.between(now(),likeablePerson.getModifyDate().toLocalTime().plusHours(AppConfig.getCanModifyHourTime()));
+        long hour = diff.toHours();
+        long min = diff.toMinutes() - hour*60;
+        long sec = diff.toSeconds() - hour*3600-min*60;
+        return LocalTime.of((int) hour, (int)min, (int)sec);
     }
 }
