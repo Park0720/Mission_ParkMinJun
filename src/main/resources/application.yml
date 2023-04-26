@@ -29,3 +29,9 @@ custom:
   likeablePerson:
     from:
       max: 10
+  canModifyHour:
+    from:
+      time: 3
+  canDeleteHour:
+    from:
+      time: 3

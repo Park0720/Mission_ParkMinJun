@@ -69,10 +69,11 @@ public class LikeablePersonController {
     @DeleteMapping("/{id}")
     public String cancel(@PathVariable("id") Long id){
         LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElse(null);
-        RsData deleteRsData = likeablePersonService.cancelLikeablePerson(likeablePerson, rq.getMember());
-        if(deleteRsData.isFail()){
-            rq.historyBack(deleteRsData);
+        RsData<LikeablePerson> canDeleteRsData = likeablePersonService.canCancel(likeablePerson, rq.getMember());
+        if(canDeleteRsData.isFail()){
+            return rq.historyBack(canDeleteRsData);
         }
+        RsData<LikeablePerson> deleteRsData = likeablePersonService.cancel(likeablePerson);
         return rq.redirectWithMsg("/usr/likeablePerson/list", deleteRsData);
     }
     @PreAuthorize("isAuthenticated()")
@@ -80,7 +81,7 @@ public class LikeablePersonController {
     public String showModify(@PathVariable Long id, Model model) {
         LikeablePerson likeablePerson = likeablePersonService.getLikeablePerson(id).orElseThrow();
 
-        RsData canModifyRsData = likeablePersonService.canModify(likeablePerson,rq.getMember());
+        RsData<LikeablePerson> canModifyRsData = likeablePersonService.canModify(likeablePerson,rq.getMember());
 
         if (canModifyRsData.isFail()) return rq.historyBack(canModifyRsData);
 
