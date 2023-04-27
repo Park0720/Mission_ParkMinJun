@@ -49,6 +49,7 @@ public class Member extends BaseEntity {
         return "admin".equals(username);
     }
 
+
     // 이 회원이 본인의 인스타ID를 등록했는지 안했는지
     public boolean hasConnectedInstaMember() {
         return instaMember != null;
