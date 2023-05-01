@@ -12,6 +12,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @SuperBuilder
 @NoArgsConstructor
 @ToString(callSuper = true)
@@ -19,6 +21,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 public class LikeablePerson extends BaseEntity {
+    private LocalDateTime modifyUnlockDate;
     @ManyToOne
     @ToString.Exclude
     private InstaMember fromInstaMember; // 호감을 표시한 사람(인스타 멤버)

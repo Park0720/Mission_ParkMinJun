@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +77,7 @@ public class LikeablePersonService {
                 .toInstaMember(toInstaMember) // 호감을 받는 사람의 인스타 멤버
                 .toInstaMemberUsername(toInstaMember.getUsername()) // 중요하지 않음
                 .attractiveTypeCode(attractiveTypeCode) // 1=외모, 2=능력, 3=성격
+                .modifyUnlockDate(AppConfig.getLikeablePersonModifyUnlockDate())
                 .build();
 
         likeablePersonRepository.save(likeablePerson); // 저장

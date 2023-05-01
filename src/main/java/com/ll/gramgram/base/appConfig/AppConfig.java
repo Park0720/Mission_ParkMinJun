@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.LocalDateTime;
+
 @Configuration
 public class AppConfig {
     @Getter
@@ -12,6 +14,11 @@ public class AppConfig {
     private static long CanModifyHourTime;
     @Getter
     private static long CanDeleteHourTime;
+
+    public static LocalDateTime getLikeablePersonModifyUnlockDate() {
+        return LocalDateTime.now().plusHours(CanModifyHourTime);
+    }
+
 
     @Value("${custom.likeablePerson.from.max}")
     public void setLikeablePersonFromMax(long likeablePersonFromMax) {
@@ -25,4 +32,5 @@ public class AppConfig {
     public void setCanDeleteHourTime(long CanDeleteHourTime) {
         AppConfig.CanDeleteHourTime = CanDeleteHourTime;
     }
+
 }
