@@ -1,28 +1,46 @@
 package com.ll.gramgram.boundedContext.home.controller;
 
 import com.ll.gramgram.base.rq.Rq;
+import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Enumeration;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 public class HomeController {
     private final Rq rq;
-
+    private final InstaMemberService instaMemberService;
     @GetMapping("/")
     public String showMain() {
-        return "usr/home/main";
+        if (rq.isLogout()) return "redirect:/usr/member/login";
+
+        return "redirect:/usr/member/me";
+    }
+
+    @GetMapping("/usr/home/about")
+    public String showAbout() {
+        return "usr/home/about";
+    }
+    @GetMapping("/{instaID}")
+    public String showMember(@PathVariable String instaID) {
+        Optional<InstaMember> opinstaMember = instaMemberService.findByUsername(instaID);
+        if (opinstaMember.isPresent()) {
+            return "usr/instaMember/memberinfo";
+        }
+        return "error/nodata";
     }
 
     @GetMapping("/usr/debugSession")
     @ResponseBody
-    @PreAuthorize("hasAuthority('admin')")
     public String showDebugSession(HttpSession session) {
         StringBuilder sb = new StringBuilder("Session content:\n");
 
