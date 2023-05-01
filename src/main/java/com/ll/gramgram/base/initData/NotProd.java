@@ -1,14 +1,18 @@
 package com.ll.gramgram.base.initData;
 
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
+import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.member.service.MemberService;
+import com.ll.gramgram.standard.util.Ut;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Configuration
 @Profile({"dev", "test"})
@@ -38,8 +42,10 @@ public class NotProd {
                 instaMemberService.connect(memberUser3, "insta_user3", "W");
                 instaMemberService.connect(memberUser4, "insta_user4", "M");
 
-                likeablePersonService.like(memberUser3, "insta_user4", 1);
-                likeablePersonService.like(memberUser3, "insta_user100", 2);
+                LikeablePerson likeablePersonToinstaUser4 = likeablePersonService.like(memberUser3, "insta_user4", 1).getData();
+                Ut.reflection.setFieldValue(likeablePersonToinstaUser4, "modifydate", LocalDateTime.now().minusHours(3));
+                LikeablePerson likeablePersonToinstaUser100 = likeablePersonService.like(memberUser3, "insta_user100", 2).getData();
+                Ut.reflection.setFieldValue(likeablePersonToinstaUser100, "modifydate", LocalDateTime.now().minusHours(3));
             }
         };
     }
