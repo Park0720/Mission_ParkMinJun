@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class LikeablePerson extends BaseEntity {
-//    private LocalDateTime modifyUnlockDate;
+    private LocalDateTime modifyUnlockDate;
     @ManyToOne
     @ToString.Exclude
     private InstaMember fromInstaMember; // 호감을 표시한 사람(인스타 멤버)
@@ -39,7 +39,7 @@ public class LikeablePerson extends BaseEntity {
         }
 
         this.attractiveTypeCode = attractiveTypeCode;
-//        this.modifyUnlockDate = AppConfig.getLikeablePersonModifyUnlockDate();
+        this.modifyUnlockDate = AppConfig.getLikeablePersonModifyUnlockDate();
 
         return RsData.of("S-1", "성공");
     }
