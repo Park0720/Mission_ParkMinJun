@@ -23,8 +23,7 @@ public class NotificationController {
     @PreAuthorize("isAuthenticated()")
     public String showList(Model model) {
         if (!rq.getMember().hasConnectedInstaMember()) {
-            // Todo : connectByApi로 변경하기
-            return rq.redirectWithMsg("/usr/instaMember/connect", "먼저 본인의 인스타그램 아이디를 입력해주세요.");
+            return rq.redirectWithMsg("/usr/instaMember/connectByApi", "먼저 인스타그램 연동을 진행해주세요.");
         }
 
         List<Notification> notifications = notificationService.findByToInstaMember(rq.getMember().getInstaMember());
