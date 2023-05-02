@@ -33,6 +33,7 @@ public class Notification extends BaseEntity {
     private int oldAttractiveTypeCode; // 해당사항 없으면 0
     private String newGender; // 해당사항 없으면 null
     private int newAttractiveTypeCode; // 해당사항 없으면 0
+
     public String getNewAttractiveTypeDisplayName() {
         return switch (newAttractiveTypeCode) {
             case 1 -> "외모";
@@ -41,6 +42,7 @@ public class Notification extends BaseEntity {
             default -> "null";
         };
     }
+
     public String getOldAttractiveTypeDisplayName() {
         return switch (oldAttractiveTypeCode) {
             case 1 -> "외모";
@@ -49,6 +51,7 @@ public class Notification extends BaseEntity {
             default -> "null";
         };
     }
+
     public String getOldGenderDisplayName() {
         return switch (oldGender) {
             case "W" -> "여자";
@@ -56,6 +59,7 @@ public class Notification extends BaseEntity {
             default -> "null";
         };
     }
+
     public String getNewGenderDisplayName() {
         return switch (newGender) {
             case "W" -> "여자";
@@ -63,17 +67,19 @@ public class Notification extends BaseEntity {
             default -> "null";
         };
     }
-    public String getModifyUnlockDateRemainStrHuman() {
-        if (calDiffTime().getSecond() >= 30) {
+
+    public String getDifftimeRemainStrHuman() {
+        if (calDiffTime().getHour() == 0) {
             if (calDiffTime().getMinute() + 1 == 60) {
-                return (calDiffTime().getHour() + 1) + "시간 전";
+                return (calDiffTime().getHour() + 1) + "시간";
             }
-            return calDiffTime().getHour() + "시간 " + (calDiffTime().getMinute() + 1) + "분 전";
+            return (calDiffTime().getMinute() + 1) + "분 전";
         }
-        return calDiffTime().getHour() + "시간 " + calDiffTime().getMinute() + "분 전";
+        return calDiffTime().getHour() + "시간 " + (calDiffTime().getMinute() + 1) + "분 전";
     }
+
     public LocalTime calDiffTime() {
-        Duration diff = Duration.between(getModifyDate(), now());
+        Duration diff = Duration.between(getModifyDate().toLocalTime(), now());
         long hour = diff.toHours();
         long min = diff.toMinutes() - hour * 60;
         long sec = diff.toSeconds() - hour * 3600 - min * 60;

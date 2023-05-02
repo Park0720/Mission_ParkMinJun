@@ -74,6 +74,14 @@ public class LikeablePerson extends BaseEntity {
 
     // 초 단위에서 올림 해주세요.
     public String getModifyUnlockDateRemainStrHuman() {
+        if(calDiffTime().getHour() == 0){
+            if (calDiffTime().getSecond() >= 30) {
+                if (calDiffTime().getMinute() + 1 == 60) {
+                    return (calDiffTime().getHour() + 1) + "시간";
+                }
+            }
+            return calDiffTime().getMinute() + "분";
+        }
         if (calDiffTime().getSecond() >= 30) {
             if (calDiffTime().getMinute() + 1 == 60) {
                 return (calDiffTime().getHour() + 1) + "시간";
