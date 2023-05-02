@@ -116,7 +116,7 @@ public class LikeablePersonService {
             return RsData.of("F-2", "권한이 없습니다.");
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
-        if(!now().isAfter(likeablePerson.getModifyDate().toLocalTime().plusHours(AppConfig.getCanModifyHourTime()))) {
+        if(!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))) {
             return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(calDiffTime(likeablePerson)));
         }
         return RsData.of("S-1", "수정 가능");
@@ -131,7 +131,7 @@ public class LikeablePersonService {
             return RsData.of("F-3", "기존 호감사유와 다른 호감사유를 선택해주세요.");
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
-        if(!now().isAfter(likeablePerson.getModifyDate().toLocalTime().plusHours(AppConfig.getCanModifyHourTime()))) {
+        if(!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))) {
             return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(calDiffTime(likeablePerson)));
         }
         // 호감사유 변경
@@ -160,7 +160,7 @@ public class LikeablePersonService {
             return RsData.of("F-2", "권한이 없습니다.");
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
-        if (!now().isAfter(likeablePerson.getModifyDate().toLocalTime().plusHours(AppConfig.getCanDeleteHourTime()))){
+        if (!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))){
             return RsData.of("F-4", "일정 시간 후 삭제 가능합니다.\n삭제 가능까지 남은 시간 : %s".formatted(calDiffTime(likeablePerson)));
         }
         return RsData.of("S-1", "삭제 가능");
@@ -182,11 +182,11 @@ public class LikeablePersonService {
     }
 
     // 오류메세지 출력에 사용할 시간계산 메서드
-    public LocalTime calDiffTime(LikeablePerson likeablePerson){
-        Duration diff = Duration.between(now(),likeablePerson.getModifyDate().toLocalTime().plusHours(AppConfig.getCanModifyHourTime()));
+    public LocalTime calDiffTime(LikeablePerson likeablePerson) {
+        Duration diff = Duration.between(now(), likeablePerson.getModifyUnlockDate());
         long hour = diff.toHours();
-        long min = diff.toMinutes() - hour*60;
-        long sec = diff.toSeconds() - hour*3600-min*60;
-        return LocalTime.of((int) hour, (int)min, (int)sec);
+        long min = diff.toMinutes() - hour * 60;
+        long sec = diff.toSeconds() - hour * 3600 - min * 60;
+        return LocalTime.of((int) hour, (int) min, (int) sec);
     }
 }

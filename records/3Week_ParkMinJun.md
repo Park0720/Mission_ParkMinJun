@@ -77,7 +77,11 @@
 **호감표시/호감사유변경 후, 개별 호감표시건에 대해서, 3시간 동안은 호감취소와 호감사유변경을 할 수 없도록 작업**
 
 ---
- 접근 방법
+ - `modify`, `delete` 메서드를 진행할 때, 혹은 `like` 메서드를 통해 호감사유변경을 시도할 경우에도 `modifyDate`를 기준으로 
+3시간이 지나지 않았으면 해당 버튼을 눌렀을 때 오류 반환하도록 출력
+ - 오류메세지에 남은 시간을 출력하도록 `calDiffTime` 메서드 생성
+ - 3시간은 변경될 수 있는 사항이라 `.yml`파일에서 따로 설정
+ - UI에서 남은 시간 나오도록 변경
 
 ---
 **알림기능 구현**
@@ -98,7 +102,13 @@
 **호감표시/호감사유변경 후, 개별 호감표시건에 대해서, 3시간 동안은 호감취소와 호감사유변경을 할 수 없도록 작업**
 
 ---
-- 특이사항
+- 페이지에서 변경을 할 경우 `modifyDate`와 `modifyUnlockDate`가 잘 변경되는데 테스트를 진행할 경우 `modifyUnlockDate`가 
+3시간 뒤로 변경되지 않는다.
+- ```LikeablePersonServiceTests.java```파일 TestCase 8의 
+```TestUt.setFieldValue(likeablePersonToBts, "modifyUnlockDate", LocalDateTime.now().minusSeconds(1));```에서
+```minusSeconds(-1)```로 되어있어서 `modify`가 진행되지 않아 테스트상황에선 `modifyUnlockDate`가 갱신되지 않음
+-> 해당 문제 해결
+- 
 ---
 **알림기능 구현**
 

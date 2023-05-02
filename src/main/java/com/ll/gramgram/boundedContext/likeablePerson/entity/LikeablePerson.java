@@ -13,7 +13,11 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import static java.time.LocalTime.now;
 
 @SuperBuilder
 @NoArgsConstructor
@@ -51,6 +55,7 @@ public class LikeablePerson extends BaseEntity {
             default -> "능력";
         };
     }
+
     public String getAttractiveTypeDisplayNameWithIcon() {
         return switch (attractiveTypeCode) {
             case 1 -> "<i class=\"fa-solid fa-person-rays\"></i>";
@@ -58,7 +63,31 @@ public class LikeablePerson extends BaseEntity {
             default -> "<i class=\"fa-solid fa-people-roof\"></i>";
         } + "&nbsp;" + getAttractiveTypeDisplayName();
     }
+
     public String getJdenticon() {
         return Ut.hash.sha256(fromInstaMember.getId() + "_likes_" + toInstaMember.getId());
+    }
+
+    public boolean isModifyUnlocked() {
+        return modifyUnlockDate.isBefore(LocalDateTime.now());
+    }
+
+    // 초 단위에서 올림 해주세요.
+    public String getModifyUnlockDateRemainStrHuman() {
+        if (calDiffTime().getSecond() >= 30) {
+            if (calDiffTime().getMinute() + 1 == 60) {
+                return (calDiffTime().getHour() + 1) + "시간";
+            }
+            return calDiffTime().getHour() + "시간 " + (calDiffTime().getMinute() + 1) + "분";
+        }
+        return calDiffTime().getHour() + "시간 " + calDiffTime().getMinute() + "분";
+    }
+
+    public LocalTime calDiffTime() {
+        Duration diff = Duration.between(now(), modifyUnlockDate);
+        long hour = diff.toHours();
+        long min = diff.toMinutes() - hour * 60;
+        long sec = diff.toSeconds() - hour * 3600 - min * 60;
+        return LocalTime.of((int) hour, (int) min, (int) sec);
     }
 }
