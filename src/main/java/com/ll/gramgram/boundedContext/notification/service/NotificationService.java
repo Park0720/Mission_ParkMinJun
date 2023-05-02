@@ -18,13 +18,13 @@ public class NotificationService {
         return notificationRepository.findByToInstaMember(toInstaMember);
     }
 
-    public void createNotificationLike(LikeablePerson likeablePerson) {
+    public void createNotificationLike(LikeablePerson likeablePerson, int attractiveTypeCode) {
         Notification notification = Notification
                 .builder()
                 .oldAttractiveTypeCode(0)
-                .newAttractiveTypeCode(0)
+                .newAttractiveTypeCode(attractiveTypeCode)
                 .oldGender(null)
-                .newGender(null)
+                .newGender(likeablePerson.getToInstaMember().getGender())
                 .readDate(null)
                 .typeCode("Like")
                 .fromInstaMember(likeablePerson.getFromInstaMember())
@@ -38,7 +38,7 @@ public class NotificationService {
                 .builder()
                 .oldAttractiveTypeCode(oldAttractiveTypeCode)
                 .newAttractiveTypeCode(newAttractiveTypeCode)
-                .oldGender(null)
+                .oldGender(likeablePerson.getToInstaMember().getGender())
                 .newGender(null)
                 .readDate(null)
                 .typeCode("Modify")

@@ -89,6 +89,8 @@
 ---
 - 이벤트 발생 시에 해당 알림을 생성하면 될 것 같은데 어떻게 시작해야할 지 감이 안 잡힘
 - `LikeablePersonService` 에서 `like`, `modify` 메서드가 실행될 때 `Notification` 엔티티 생성 하도록 함
+- `Notification` 엔티티에서 성별, 호감사유 구분할 수 있도록 변경
+- `Like`시에 발생하는 알림 기본 템플릿 만듬
 
 ---
 ### 특이사항

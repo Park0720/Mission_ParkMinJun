@@ -9,7 +9,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import static java.time.LocalTime.now;
 
 @Entity
 @Getter
@@ -29,4 +33,50 @@ public class Notification extends BaseEntity {
     private int oldAttractiveTypeCode; // 해당사항 없으면 0
     private String newGender; // 해당사항 없으면 null
     private int newAttractiveTypeCode; // 해당사항 없으면 0
+    public String getNewAttractiveTypeDisplayName() {
+        return switch (newAttractiveTypeCode) {
+            case 1 -> "외모";
+            case 2 -> "성격";
+            case 3 -> "능력";
+            default -> "null";
+        };
+    }
+    public String getOldAttractiveTypeDisplayName() {
+        return switch (oldAttractiveTypeCode) {
+            case 1 -> "외모";
+            case 2 -> "성격";
+            case 3 -> "능력";
+            default -> "null";
+        };
+    }
+    public String getOldGenderDisplayName() {
+        return switch (oldGender) {
+            case "W" -> "여자";
+            case "M" -> "남자";
+            default -> "null";
+        };
+    }
+    public String getNewGenderDisplayName() {
+        return switch (newGender) {
+            case "W" -> "여자";
+            case "M" -> "남자";
+            default -> "null";
+        };
+    }
+    public String getModifyUnlockDateRemainStrHuman() {
+        if (calDiffTime().getSecond() >= 30) {
+            if (calDiffTime().getMinute() + 1 == 60) {
+                return (calDiffTime().getHour() + 1) + "시간 전";
+            }
+            return calDiffTime().getHour() + "시간 " + (calDiffTime().getMinute() + 1) + "분 전";
+        }
+        return calDiffTime().getHour() + "시간 " + calDiffTime().getMinute() + "분 전";
+    }
+    public LocalTime calDiffTime() {
+        Duration diff = Duration.between(getModifyDate(), now());
+        long hour = diff.toHours();
+        long min = diff.toMinutes() - hour * 60;
+        long sec = diff.toSeconds() - hour * 3600 - min * 60;
+        return LocalTime.of((int) hour, (int) min, (int) sec);
+    }
 }
