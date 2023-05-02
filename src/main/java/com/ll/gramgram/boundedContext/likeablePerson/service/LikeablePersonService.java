@@ -10,6 +10,7 @@ import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
+import com.ll.gramgram.boundedContext.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
     private final ApplicationEventPublisher publisher;
+    private final NotificationService notificationService;
 
     public Optional<LikeablePerson> getLikeablePerson(Long id) {
         return likeablePersonRepository.findById(id);
@@ -90,6 +92,8 @@ public class LikeablePersonService {
 
         publisher.publishEvent(new EventAfterLike(this, likeablePerson));
 
+        notificationService.createNotificationLike(likeablePerson);
+
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
 
@@ -149,6 +153,8 @@ public class LikeablePersonService {
 
         if (rsData.isSuccess()) {
             publisher.publishEvent(new EventAfterModifyAttractiveType(this, likeablePerson, oldAttractiveTypeCode, attractiveTypeCode));
+
+            notificationService.createNotificationModify(likeablePerson, oldAttractiveTypeCode, attractiveTypeCode);
         }
     }
 
