@@ -7,17 +7,21 @@ import com.ll.gramgram.boundedContext.notification.entity.Notification;
 import com.ll.gramgram.boundedContext.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class NotificationService {
     private final NotificationRepository notificationRepository;
     public List<Notification> findByToInstaMember(InstaMember toInstaMember) {
         return notificationRepository.findByToInstaMember(toInstaMember);
     }
 
+    @Transactional
     public void createNotificationLike(LikeablePerson likeablePerson, int attractiveTypeCode) {
         Notification notification = Notification
                 .builder()
@@ -33,6 +37,7 @@ public class NotificationService {
 
         notificationRepository.save(notification);
     }
+    @Transactional
     public void createNotificationModify(LikeablePerson likeablePerson, int oldAttractiveTypeCode, int newAttractiveTypeCode) {
         Notification notification = Notification
                 .builder()
@@ -47,5 +52,9 @@ public class NotificationService {
                 .build();
 
         notificationRepository.save(notification);
+    }
+    @Transactional
+    public void updateReadDate(List<Notification> notifications){
+        notifications.stream().forEach(x -> x.setReadDate(LocalDateTime.now()));
     }
 }

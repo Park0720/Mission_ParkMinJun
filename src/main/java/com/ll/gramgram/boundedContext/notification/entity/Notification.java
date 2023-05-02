@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
@@ -21,6 +22,7 @@ import static java.time.LocalTime.now;
 @SuperBuilder
 @ToString(callSuper = true)
 public class Notification extends BaseEntity {
+    @Setter
     private LocalDateTime readDate;
     @ManyToOne
     @ToString.Exclude
