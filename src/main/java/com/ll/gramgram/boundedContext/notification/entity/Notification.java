@@ -81,7 +81,7 @@ public class Notification extends BaseEntity {
     }
 
     public LocalTime calDiffTime() {
-        Duration diff = Duration.between(getModifyDate().toLocalTime(), now());
+        Duration diff = Duration.between(getCreateDate().toLocalTime(), now());
         long hour = diff.toHours();
         long min = diff.toMinutes() - hour * 60;
         long sec = diff.toSeconds() - hour * 3600 - min * 60;
