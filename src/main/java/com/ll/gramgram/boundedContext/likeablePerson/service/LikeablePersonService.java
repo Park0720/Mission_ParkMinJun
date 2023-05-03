@@ -92,7 +92,7 @@ public class LikeablePersonService {
 
         publisher.publishEvent(new EventAfterLike(this, likeablePerson));
 
-        notificationService.createNotificationLike(likeablePerson, attractiveTypeCode);
+        notificationService.createLikeNotification(likeablePerson, attractiveTypeCode);
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
@@ -154,7 +154,7 @@ public class LikeablePersonService {
         if (rsData.isSuccess()) {
             publisher.publishEvent(new EventAfterModifyAttractiveType(this, likeablePerson, oldAttractiveTypeCode, attractiveTypeCode));
 
-            notificationService.createNotificationModify(likeablePerson, oldAttractiveTypeCode, attractiveTypeCode);
+            notificationService.createModifyNotification(likeablePerson, oldAttractiveTypeCode, attractiveTypeCode);
         }
     }
 

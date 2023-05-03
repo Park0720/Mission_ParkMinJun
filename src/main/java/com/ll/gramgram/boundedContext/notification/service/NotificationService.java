@@ -22,7 +22,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public void createNotificationLike(LikeablePerson likeablePerson, int attractiveTypeCode) {
+    public void createLikeNotification(LikeablePerson likeablePerson, int attractiveTypeCode) {
         Notification notification = Notification
                 .builder()
                 .oldAttractiveTypeCode(0)
@@ -38,7 +38,7 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
     @Transactional
-    public void createNotificationModify(LikeablePerson likeablePerson, int oldAttractiveTypeCode, int newAttractiveTypeCode) {
+    public void createModifyNotification(LikeablePerson likeablePerson, int oldAttractiveTypeCode, int newAttractiveTypeCode) {
         Notification notification = Notification
                 .builder()
                 .oldAttractiveTypeCode(oldAttractiveTypeCode)
