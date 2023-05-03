@@ -29,6 +29,7 @@ public class NotificationController {
 
         List<Notification> notifications = notificationService.findByToInstaMember(rq.getMember().getInstaMember());
 
+        // 알림 페이지 방문 시에 ReadDate 갱신
         notificationService.updateReadDate(notifications);
 
         model.addAttribute("notifications", notifications);

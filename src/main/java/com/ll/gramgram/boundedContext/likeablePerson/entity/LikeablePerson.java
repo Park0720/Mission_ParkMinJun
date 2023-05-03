@@ -72,7 +72,7 @@ public class LikeablePerson extends BaseEntity {
         return modifyUnlockDate.isBefore(LocalDateTime.now());
     }
 
-    // 초 단위에서 올림 해주세요.
+    // 초 단위에서 올림, 분이 60일 경우 표시 X, 시간이 0일 경우 분만 표시
     public String getModifyUnlockDateRemainStrHuman() {
         if(calDiffTime().getHour() == 0){
             if (calDiffTime().getSecond() >= 30) {
@@ -91,6 +91,7 @@ public class LikeablePerson extends BaseEntity {
         return calDiffTime().getHour() + "시간 " + calDiffTime().getMinute() + "분";
     }
 
+    // UnlockDate 까지 남은 시간 계산
     public LocalTime calDiffTime() {
         Duration diff = Duration.between(now(), modifyUnlockDate);
         long hour = diff.toHours();

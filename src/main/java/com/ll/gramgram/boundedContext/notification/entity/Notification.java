@@ -70,6 +70,7 @@ public class Notification extends BaseEntity {
         };
     }
 
+
     public String getDifftimeRemainStrHuman() {
         if (calDiffTime().getHour() == 0) {
             if (calDiffTime().getMinute() + 1 == 60) {
@@ -80,6 +81,7 @@ public class Notification extends BaseEntity {
         return calDiffTime().getHour() + "시간 " + (calDiffTime().getMinute() + 1) + "분 전";
     }
 
+    // 알림 생성시간이 언제인 지 계산
     public LocalTime calDiffTime() {
         Duration diff = Duration.between(getCreateDate().toLocalTime(), now());
         long hour = diff.toHours();
