@@ -20,6 +20,9 @@ public class NotificationService {
     public List<Notification> findByToInstaMember(InstaMember toInstaMember) {
         return notificationRepository.findByToInstaMember(toInstaMember);
     }
+    public List<Notification> findByToInstaMemberAndReadDate(InstaMember toInstaMember, LocalDateTime readDate) {
+        return notificationRepository.findByToInstaMemberAndReadDate(toInstaMember, readDate);
+    }
 
     @Transactional
     public void createLikeNotification(LikeablePerson likeablePerson, int attractiveTypeCode) {
