@@ -19,9 +19,6 @@ public class NotificationService {
     public List<Notification> findByToInstaMember(InstaMember toInstaMember) {
         return notificationRepository.findByToInstaMember(toInstaMember);
     }
-    public List<Notification> findByToInstaMemberAndReadDate(InstaMember toInstaMember, LocalDateTime readDate) {
-        return notificationRepository.findByToInstaMemberAndReadDate(toInstaMember, readDate);
-    }
 
     @Transactional
     public void createLikeNotification(LikeablePerson likeablePerson, int attractiveTypeCode) {
@@ -57,6 +54,9 @@ public class NotificationService {
     }
     @Transactional
     public void updateReadDate(List<Notification> notifications){
-        notifications.stream().forEach(x -> x.setReadDate(LocalDateTime.now()));
+        notifications
+                .stream()
+                .filter(x -> x.getReadDate()==null)
+                .forEach(x -> x.setReadDate(LocalDateTime.now()));
     }
 }
