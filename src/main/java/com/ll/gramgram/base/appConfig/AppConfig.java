@@ -11,12 +11,12 @@ public class AppConfig {
     @Getter
     private static long likeablePersonFromMax;
     @Getter
-    private static long CanModifyHourTime;
+    private static long canModifyHourTime;
     @Getter
-    private static long CanDeleteHourTime;
+    private static long canDeleteHourTime;
 
     public static LocalDateTime getLikeablePersonModifyUnlockDate() {
-        return LocalDateTime.now().plusHours(CanModifyHourTime);
+        return LocalDateTime.now().plusHours(canModifyHourTime);
     }
 
 
@@ -26,11 +26,11 @@ public class AppConfig {
     }
     @Value("${custom.canModifyHour.from.time}")
     public void setCanModifyHourTime(long CanModifyHourTime) {
-        AppConfig.CanModifyHourTime = CanModifyHourTime;
+        AppConfig.canModifyHourTime = CanModifyHourTime;
     }
     @Value("${custom.canDeleteHour.from.time}")
     public void setCanDeleteHourTime(long CanDeleteHourTime) {
-        AppConfig.CanDeleteHourTime = CanDeleteHourTime;
+        AppConfig.canDeleteHourTime = CanDeleteHourTime;
     }
 
 }

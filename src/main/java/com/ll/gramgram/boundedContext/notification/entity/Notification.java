@@ -72,13 +72,14 @@ public class Notification extends BaseEntity {
 
 
     public String getDifftimeRemainStrHuman() {
-        if (calDiffTime().getHour() == 0) {
-            if (calDiffTime().getMinute() + 1 == 60) {
-                return (calDiffTime().getHour() + 1) + "시간";
+        LocalTime diff = calDiffTime();
+        if (diff.getHour() == 0) {
+            if (diff.getMinute() + 1 == 60) {
+                return 1 + "시간";
             }
-            return (calDiffTime().getMinute() + 1) + "분 전";
+            return (diff.getMinute() + 1) + "분 전";
         }
-        return calDiffTime().getHour() + "시간 " + (calDiffTime().getMinute() + 1) + "분 전";
+        return diff.getHour() + "시간 " + (diff.getMinute() + 1) + "분 전";
     }
 
     // 알림 생성시간이 언제인 지 계산

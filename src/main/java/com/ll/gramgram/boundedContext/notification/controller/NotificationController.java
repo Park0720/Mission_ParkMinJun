@@ -29,10 +29,10 @@ public class NotificationController {
 
         List<Notification> notifications = notificationService.findByToInstaMember(rq.getMember().getInstaMember());
 
-        List<Notification> notificationsReadDateisNull = notificationService.findByToInstaMemberAndReadDate(rq.getMember().getInstaMember(), null);
+        List<Notification> notificationsReadDateNull = notificationService.findByToInstaMemberAndReadDate(rq.getMember().getInstaMember(), null);
 
-        // 알림 페이지 방문 시에 ReadDate 갱신
-        notificationService.updateReadDate(notificationsReadDateisNull);
+        // 알림 페이지 방문 시에 ReadDate가 null인 것들 현재시각으로 갱신
+        notificationService.updateReadDate(notificationsReadDateNull);
 
         model.addAttribute("notifications", notifications);
 
