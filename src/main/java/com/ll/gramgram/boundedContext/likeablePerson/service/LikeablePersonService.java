@@ -11,6 +11,7 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.repository.LikeablePersonRepository;
 import com.ll.gramgram.boundedContext.member.entity.Member;
 import com.ll.gramgram.boundedContext.notification.service.NotificationService;
+import com.ll.gramgram.standard.util.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -122,7 +123,7 @@ public class LikeablePersonService {
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
         if(!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))) {
-            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(calDiffTime(likeablePerson)));
+            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(now(), likeablePerson.getModifyUnlockDate().toLocalTime())));
         }
         return RsData.of("S-1", "수정 가능");
     }
@@ -137,7 +138,7 @@ public class LikeablePersonService {
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
         if(!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))) {
-            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(calDiffTime(likeablePerson)));
+            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(now(), likeablePerson.getModifyUnlockDate().toLocalTime())));
         }
         // 호감사유 변경
         modifyAttractiveTypeCode(likeablePerson, attractiveTypeCode);
@@ -169,7 +170,7 @@ public class LikeablePersonService {
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
         if (!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))){
-            return RsData.of("F-4", "일정 시간 후 삭제 가능합니다.\n삭제 가능까지 남은 시간 : %s".formatted(calDiffTime(likeablePerson)));
+            return RsData.of("F-4", "일정 시간 후 삭제 가능합니다.\n삭제 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(now(), likeablePerson.getModifyUnlockDate().toLocalTime())));
         }
         return RsData.of("S-1", "삭제 가능");
     }
@@ -187,14 +188,5 @@ public class LikeablePersonService {
         likeablePersonRepository.delete(likeablePerson);
 
         return RsData.of("S-1", "인스타유저(%s) 삭제 성공".formatted(likeablePerson.getToInstaMember().getUsername()));
-    }
-
-    // 오류메세지 출력에 사용할 시간계산 메서드
-    public LocalTime calDiffTime(LikeablePerson likeablePerson) {
-        Duration diff = Duration.between(now(), likeablePerson.getModifyUnlockDate());
-        long hour = diff.toHours();
-        long min = diff.toMinutes() - hour * 60;
-        long sec = diff.toSeconds() - hour * 3600 - min * 60;
-        return LocalTime.of((int) hour, (int) min, (int) sec);
     }
 }
