@@ -2,6 +2,7 @@ package com.ll.gramgram.boundedContext.notification.entity;
 
 import com.ll.gramgram.base.baseEntity.BaseEntity;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
+import com.ll.gramgram.standard.util.Ut;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
@@ -72,7 +73,7 @@ public class Notification extends BaseEntity {
 
 
     public String getDifftimeRemainStrHuman() {
-        LocalTime diff = calDiffTime();
+        LocalTime diff = Ut.calDiffTime(getCreateDate().toLocalTime(), now());
         if (diff.getHour() == 0) {
             if (diff.getMinute() + 1 == 60) {
                 return 1 + "시간";

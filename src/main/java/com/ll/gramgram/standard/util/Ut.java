@@ -7,8 +7,13 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Base64;
+
+import static java.time.LocalTime.now;
 
 public class Ut {
     public static class reflection {
@@ -134,5 +139,12 @@ public class Ut {
 
             return url.substring(0, startPoint) + urlAfter;
         }
+    }
+    public static LocalTime calDiffTime(LocalTime localTime1, LocalTime localTime2) {
+        Duration diff = Duration.between(localTime1, localTime2);
+        long hour = diff.toHours();
+        long min = diff.toMinutes() - hour * 60;
+        long sec = diff.toSeconds() - hour * 3600 - min * 60;
+        return LocalTime.of((int) hour, (int) min, (int) sec);
     }
 }
