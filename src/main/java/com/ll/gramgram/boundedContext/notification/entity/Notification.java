@@ -11,11 +11,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
-import static java.time.LocalTime.now;
 
 @Entity
 @Getter
@@ -71,8 +68,7 @@ public class Notification extends BaseEntity {
         };
     }
 
-
-    public String getDifftimeRemainStrHuman() {
+    public String getDiffTimeRemainStrHuman() {
         LocalTime diff = Ut.calDiffTime(getCreateDate(), LocalDateTime.now());
         if (diff.getHour() == 0) {
             if (diff.getMinute() + 1 == 60) {
@@ -82,13 +78,8 @@ public class Notification extends BaseEntity {
         }
         return diff.getHour() + "시간 " + (diff.getMinute() + 1) + "분 전";
     }
-
-    // 알림 생성시간이 언제인 지 계산
-    public LocalTime calDiffTime() {
-        Duration diff = Duration.between(getCreateDate().toLocalTime(), now());
-        long hour = diff.toHours();
-        long min = diff.toMinutes() - hour * 60;
-        long sec = diff.toSeconds() - hour * 3600 - min * 60;
-        return LocalTime.of((int) hour, (int) min, (int) sec);
+    public int getMinute() {
+        LocalTime diff = Ut.calDiffTime(getCreateDate(), LocalDateTime.now());
+        return diff.getMinute();
     }
 }

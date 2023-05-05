@@ -27,10 +27,10 @@
               알림
             </div>
             <div>
-              <span class="badge badge-primary" th:text="|${#temporals.format(notification.createDate, 'yy.MM.dd HH:mm')}, ${notification.getDifftimeRemainStrHuman()}|"></span>
+              <span class="badge badge-primary" th:text="|${#temporals.format(notification.createDate, 'yy.MM.dd HH:mm')}, ${notification.getDiffTimeRemainStrHuman()}|"></span>
               <!-- ${notifications.get(0).getModifyUnlockDateRemainStrHuman()} -->
               <!-- ${#temporals.format(notifications.get(0).modifyDate, 'yy.MM.dd HH:mm')} -->
-              <i th:if = "${notification.calDiffTime().getMinute()<=10}" class="fa-solid fa-fire text-red-500"></i>
+              <i th:if = "${notification.getMinute()<=10}" class="fa-solid fa-fire text-red-500"></i>
             </div>
           </div>
           <div class="mt-4 flex flex-col gap-2">
@@ -54,8 +54,8 @@
               알림
             </div>
             <div>
-              <span class="badge badge-primary" th:text="|${#temporals.format(notification.createDate, 'yy.MM.dd HH:mm')}, ${notification.getDifftimeRemainStrHuman()}|"></span>
-              <i th:if = "${notification.calDiffTime().getMinute()<=10}" class="fa-solid fa-fire text-red-500"></i>
+              <span class="badge badge-primary" th:text="|${#temporals.format(notification.createDate, 'yy.MM.dd HH:mm')}, ${notification.getDiffTimeRemainStrHuman()}|"></span>
+              <i th:if = "${notification.getMinute()<=10}" class="fa-solid fa-fire text-red-500"></i>
             </div>
           </div>
           <div class="mt-4 flex flex-col gap-2">

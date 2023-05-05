@@ -1,7 +1,7 @@
 package com.ll.gramgram.boundedContext.likeablePerson.entity;
 
-import com.ll.gramgram.base.baseEntity.BaseEntity;
 import com.ll.gramgram.base.appConfig.AppConfig;
+import com.ll.gramgram.base.baseEntity.BaseEntity;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.standard.util.Ut;
@@ -13,11 +13,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
-import static java.time.LocalTime.now;
 
 @SuperBuilder
 @NoArgsConstructor
