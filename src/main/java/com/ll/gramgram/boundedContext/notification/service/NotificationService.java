@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.notification.service;
 
+import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.notification.entity.Notification;
@@ -16,47 +17,50 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class NotificationService {
     private final NotificationRepository notificationRepository;
+
     public List<Notification> findByToInstaMember(InstaMember toInstaMember) {
         return notificationRepository.findByToInstaMember(toInstaMember);
     }
-
-    @Transactional
-    public void createLikeNotification(LikeablePerson likeablePerson, int attractiveTypeCode) {
-        Notification notification = Notification
-                .builder()
-                .oldAttractiveTypeCode(0)
-                .newAttractiveTypeCode(attractiveTypeCode)
-                .oldGender(null)
-                .newGender(likeablePerson.getFromInstaMember().getGender())
-                .readDate(null)
-                .typeCode("Like")
-                .fromInstaMember(likeablePerson.getFromInstaMember())
-                .toInstaMember(likeablePerson.getToInstaMember())
-                .build();
-
-        notificationRepository.save(notification);
+    public List<Notification> findByToInstaMember_username(String username) {
+        return notificationRepository.findByToInstaMember_username(username);
     }
+
     @Transactional
-    public void createModifyNotification(LikeablePerson likeablePerson, int oldAttractiveTypeCode, int newAttractiveTypeCode) {
+    public RsData<Notification> createLikeNotification(LikeablePerson likeablePerson) {
+        return make(likeablePerson, "Like", 0, null);
+    }
+
+    @Transactional
+    public RsData<Notification> createModifyNotification(LikeablePerson likeablePerson, int oldAttractiveTypeCode) {
+        return make(likeablePerson, "ModifyAttractiveType", oldAttractiveTypeCode, likeablePerson.getFromInstaMember().getGender());
+    }
+
+    private RsData<Notification> make(LikeablePerson likeablePerson, String typeCode, int oldAttractiveTypeCode, String oldGender) {
         Notification notification = Notification
                 .builder()
+                .typeCode(typeCode)
+                .toInstaMember(likeablePerson.getToInstaMember())
+                .fromInstaMember(likeablePerson.getFromInstaMember())
                 .oldAttractiveTypeCode(oldAttractiveTypeCode)
-                .newAttractiveTypeCode(newAttractiveTypeCode)
-                .oldGender(likeablePerson.getFromInstaMember().getGender())
-                .newGender(null)
-                .readDate(null)
-                .typeCode("Modify")
-                .fromInstaMember(likeablePerson.getFromInstaMember())
-                .toInstaMember(likeablePerson.getToInstaMember())
+                .oldGender(oldGender)
+                .newAttractiveTypeCode(likeablePerson.getAttractiveTypeCode())
+                .newGender(likeablePerson.getFromInstaMember().getGender())
                 .build();
 
         notificationRepository.save(notification);
+
+        return RsData.of("S-1", "알림 메세지가 생성되었습니다.", notification);
     }
     @Transactional
-    public void updateReadDate(List<Notification> notifications){
+    public RsData updateReadDate(List<Notification> notifications){
         notifications
                 .stream()
                 .filter(x -> x.getReadDate()==null)
                 .forEach(x -> x.setReadDate(LocalDateTime.now()));
+
+        return RsData.of("S-1", "읽음 처리 되었습니다.");
+    }
+    public boolean countUnreadNotificationsByToInstaMember(InstaMember instaMember) {
+        return notificationRepository.countByToInstaMemberAndReadDateIsNull(instaMember) > 0;
     }
 }

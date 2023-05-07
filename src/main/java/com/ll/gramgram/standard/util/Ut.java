@@ -10,6 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -138,11 +139,41 @@ public class Ut {
             return url.substring(0, startPoint) + urlAfter;
         }
     }
-    public static LocalTime calDiffTime(LocalDateTime localDateTime1, LocalDateTime localDateTime2) {
-        Duration diff = Duration.between(localDateTime1, localDateTime2);
-        long hour = diff.toHours();
-        long min = diff.toMinutes() - hour * 60;
-        long sec = diff.toSeconds() - hour * 3600 - min * 60;
-        return LocalTime.of((int) hour, (int) min, (int) sec);
+
+    public static class time {
+        public static String diffFormat1Human(LocalDateTime time1, LocalDateTime time2) {
+            String suffix = time1.isAfter(time2) ? "전" : "후";
+
+            // 두개의 시간의 차이를 초로 환산
+            long diff = Math.abs(ChronoUnit.SECONDS.between(time1, time2));
+
+            long diffSeconds = diff % 60; // 초 부분만
+            long diffMinutes = diff / (60) % 60; // 분 부분만
+            long diffHours = diff / (60 * 60) % 24; // 시간 부분만
+            long diffDays = diff / (60 * 60 * 24); // 나머지는 일 부분으로
+
+            StringBuilder sb = new StringBuilder();
+
+            if (diffDays > 0) sb.append(diffDays).append("일 ");
+            if (diffHours > 0) sb.append(diffHours).append("시간 ");
+            if (diffMinutes > 0) sb.append(diffMinutes).append("분 ");
+            if (diffSeconds > 0) sb.append(diffSeconds).append("초 ");
+
+            if (sb.isEmpty()) sb.append("1초 ");
+
+            return sb.append(suffix).toString();
+        }
+
+        public static LocalTime diffFormatHumanLocalTime(LocalDateTime time1, LocalDateTime time2) {
+            // 두개의 시간의 차이를 초로 환산
+            long diff = Math.abs(ChronoUnit.SECONDS.between(time1, time2));
+
+            long diffSeconds = diff % 60; // 초 부분만
+            long diffMinutes = diff / (60) % 60; // 분 부분만
+            long diffHours = diff / (60 * 60) % 24; // 시간 부분만
+            long diffDays = diff / (60 * 60 * 24); // 나머지는 일 부분으로
+
+            return LocalTime.of((int) diffHours, (int) diffMinutes, (int) diffSeconds);
+        }
     }
 }

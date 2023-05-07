@@ -31,7 +31,6 @@ public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
     private final ApplicationEventPublisher publisher;
-    private final NotificationService notificationService;
 
     public Optional<LikeablePerson> getLikeablePerson(Long id) {
         return likeablePersonRepository.findById(id);
@@ -93,9 +92,6 @@ public class LikeablePersonService {
 
         publisher.publishEvent(new EventAfterLike(this, likeablePerson));
 
-        // Like 알림 생성
-        notificationService.createLikeNotification(likeablePerson, attractiveTypeCode);
-
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
     }
 
@@ -122,8 +118,8 @@ public class LikeablePersonService {
             return RsData.of("F-2", "권한이 없습니다.");
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
-        if(!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))) {
-            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(LocalDateTime.now(), likeablePerson.getModifyUnlockDate())));
+        if(!likeablePerson.isModifyUnlocked()) {
+            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(likeablePerson.getModifyUnlockDateRemainStrHuman()));
         }
         return RsData.of("S-1", "수정 가능");
     }
@@ -137,8 +133,8 @@ public class LikeablePersonService {
             return RsData.of("F-3", "기존 호감사유와 다른 호감사유를 선택해주세요.");
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
-        if(!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))) {
-            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(LocalDateTime.now(), likeablePerson.getModifyUnlockDate())));
+        if(!likeablePerson.isModifyUnlocked()) {
+            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(likeablePerson.getModifyUnlockDateRemainStrHuman()));
         }
         // 호감사유 변경
         modifyAttractiveTypeCode(likeablePerson, attractiveTypeCode);
@@ -149,15 +145,13 @@ public class LikeablePersonService {
         return RsData.of("S-2", "호감사유를 %s에서 %s로 변경합니다.".formatted(checkLikeablePersonAttractiveTypeName, modifyLikeablePersonAttractiveTypeName), likeablePerson);
     }
 
-    private void modifyAttractiveTypeCode(LikeablePerson likeablePerson, int attractiveTypeCode) {
+    public void modifyAttractiveTypeCode(LikeablePerson likeablePerson, int attractiveTypeCode) {
         int oldAttractiveTypeCode = likeablePerson.getAttractiveTypeCode();
         RsData rsData = likeablePerson.updateAttractiveTypeCode(attractiveTypeCode);
 
         if (rsData.isSuccess()) {
             publisher.publishEvent(new EventAfterModifyAttractiveType(this, likeablePerson, oldAttractiveTypeCode, attractiveTypeCode));
 
-            // Modify 알림 생성
-            notificationService.createModifyNotification(likeablePerson, oldAttractiveTypeCode, attractiveTypeCode);
         }
     }
 
@@ -169,8 +163,8 @@ public class LikeablePersonService {
             return RsData.of("F-2", "권한이 없습니다.");
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
-        if (!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))){
-            return RsData.of("F-4", "일정 시간 후 삭제 가능합니다.\n삭제 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(LocalDateTime.now(), likeablePerson.getModifyUnlockDate())));
+        if (!likeablePerson.isModifyUnlocked()){
+            return RsData.of("F-4", "일정 시간 후 삭제 가능합니다.\n삭제 가능까지 남은 시간 : %s".formatted(likeablePerson.getModifyUnlockDateRemainStrHuman()));
         }
         return RsData.of("S-1", "삭제 가능");
     }

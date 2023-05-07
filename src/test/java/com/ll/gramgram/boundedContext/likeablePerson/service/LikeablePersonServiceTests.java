@@ -141,8 +141,8 @@ public class LikeablePersonServiceTests {
     @Test
     @DisplayName("설정파일에서 호감표시에 대한 수정쿨타임 가져오기")
     void t006() throws Exception {
-        System.out.println("likeablePersonModifyCoolTime : " + AppConfig.getCanModifyHourTime());
-        assertThat(AppConfig.getCanModifyHourTime()).isGreaterThan(0);
+        System.out.println("likeablePersonModifyCoolTime : " + AppConfig.getCanModifyTime());
+        assertThat(AppConfig.getCanModifyTime()).isGreaterThan(0);
     }
 
     @Test

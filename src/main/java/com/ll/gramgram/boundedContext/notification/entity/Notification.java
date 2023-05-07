@@ -69,17 +69,9 @@ public class Notification extends BaseEntity {
     }
 
     public String getDiffTimeRemainStrHuman() {
-        LocalTime diff = Ut.calDiffTime(getCreateDate(), LocalDateTime.now());
-        if (diff.getHour() == 0) {
-            if (diff.getMinute() + 1 == 60) {
-                return 1 + "시간";
-            }
-            return (diff.getMinute() + 1) + "분 전";
-        }
-        return diff.getHour() + "시간 " + (diff.getMinute() + 1) + "분 전";
+        return Ut.time.diffFormat1Human(LocalDateTime.now(), getCreateDate());
     }
-    public int getMinute() {
-        LocalTime diff = Ut.calDiffTime(getCreateDate(), LocalDateTime.now());
-        return diff.getMinute();
+    public LocalTime getDiffTimeRemainLocalTime(){
+        return Ut.time.diffFormatHumanLocalTime(LocalDateTime.now(), getCreateDate());
     }
 }
