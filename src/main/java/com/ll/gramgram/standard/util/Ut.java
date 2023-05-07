@@ -149,17 +149,27 @@ public class Ut {
 
             long diffSeconds = diff % 60; // 초 부분만
             long diffMinutes = diff / (60) % 60; // 분 부분만
-            long diffHours = diff / (60 * 60) % 24; // 시간 부분만
+            if(diffSeconds>=30){
+                diffMinutes++;
+            }
+            long diffHours = diff / (60 * 60) % 24;// 시간 부분만
+            if(diffMinutes == 60){
+                diffMinutes = 0;
+                diffHours++;
+            }
             long diffDays = diff / (60 * 60 * 24); // 나머지는 일 부분으로
+            if(diffHours == 24){
+                diffHours = 0;
+                diffDays++;
+            }
 
             StringBuilder sb = new StringBuilder();
 
             if (diffDays > 0) sb.append(diffDays).append("일 ");
             if (diffHours > 0) sb.append(diffHours).append("시간 ");
             if (diffMinutes > 0) sb.append(diffMinutes).append("분 ");
-            if (diffSeconds > 0) sb.append(diffSeconds).append("초 ");
 
-            if (sb.isEmpty()) sb.append("1초 ");
+            if (sb.isEmpty()) sb.append("1분 ");
 
             return sb.append(suffix).toString();
         }

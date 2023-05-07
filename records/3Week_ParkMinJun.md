@@ -117,6 +117,7 @@
 - 이벤트 리스너를 통해서 구현해야할 것 같은데 구현 방법이 도저히 떠오르지 않아서 `LikeablePersonService`에서 `like`와 `modify` 진행 시에 엔티티 생성함
 ---
 ### Refactoring
+
 ---
 **코드 리뷰 후**
 
