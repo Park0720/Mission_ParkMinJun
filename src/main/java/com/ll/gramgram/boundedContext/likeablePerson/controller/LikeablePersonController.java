@@ -121,50 +121,12 @@ public class LikeablePersonController {
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
             List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
-            List<LikeablePerson> filteredLikeablePerson = likeablePeople;
-            if (gender.equals("M")) {
-                filteredLikeablePerson = likeablePeople
-                        .stream()
-                        .filter(x -> x.getFromInstaMember().getGender().equals("M"))
-                        .collect(Collectors.toList());
+            List<LikeablePerson> filteringGenderLikeablePerson = likeablePersonService.filteringGender(likeablePeople, gender);
+            List<LikeablePerson> filteringAttractiveTypeCodeLikeablePerson = likeablePersonService.filteringAttractiveTypeCode(filteringGenderLikeablePerson, attractiveTypeCode);
 
-                model.addAttribute("likeablePeople", filteredLikeablePerson);
-            }
-            else if (gender.equals("W")) {
-                 filteredLikeablePerson = likeablePeople
-                        .stream()
-                        .filter(x -> x.getFromInstaMember().getGender().equals("W"))
-                        .collect(Collectors.toList());
+            model.addAttribute("likeablePeople", filteringAttractiveTypeCodeLikeablePerson);
 
-                model.addAttribute("likeablePeople", filteredLikeablePerson);
-            }
-            else model.addAttribute("likeablePeople", likeablePeople);
 
-            if (attractiveTypeCode.equals("1")){
-                filteredLikeablePerson = filteredLikeablePerson
-                        .stream()
-                        .filter(x -> x.getAttractiveTypeCode()==1)
-                        .collect(Collectors.toList());
-
-                model.addAttribute("likeablePeople", filteredLikeablePerson);
-            }
-            else if(attractiveTypeCode.equals("2")){
-                filteredLikeablePerson = filteredLikeablePerson
-                        .stream()
-                        .filter(x -> x.getAttractiveTypeCode()==2)
-                        .collect(Collectors.toList());
-
-                model.addAttribute("likeablePeople", filteredLikeablePerson);
-            }
-            else if(attractiveTypeCode.equals("3")){
-                filteredLikeablePerson = filteredLikeablePerson
-                        .stream()
-                        .filter(x -> x.getAttractiveTypeCode()==3)
-                        .collect(Collectors.toList());
-
-                model.addAttribute("likeablePeople", filteredLikeablePerson);
-            }
-            else model.addAttribute("likeablePeople", filteredLikeablePerson);
         }
         return "usr/likeablePerson/toList";
     }
