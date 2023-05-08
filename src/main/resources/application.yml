@@ -29,9 +29,5 @@ custom:
   likeablePerson:
     from:
       max: 10
-#  canModifyHour:
-#    from:
-#      time: 3
-#  canDeleteHour:
-#    from:
-#      time: 3
+    canModifyTime: '#{60 * 60 * 3}'
+    canDeleteTime: '#{60 * 60 * 3}'

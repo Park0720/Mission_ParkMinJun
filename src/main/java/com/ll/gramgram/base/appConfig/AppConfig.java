@@ -10,27 +10,27 @@ import java.time.LocalDateTime;
 public class AppConfig {
     @Getter
     private static long likeablePersonFromMax;
-//    @Getter
-//    private static long CanModifyHourTime;
-//    @Getter
-//    private static long CanDeleteHourTime;
-//
-//    public static LocalDateTime getLikeablePersonModifyUnlockDate() {
-//        return LocalDateTime.now().plusHours(CanModifyHourTime);
-//    }
+    @Getter
+    private static long canModifyTime;
+    @Getter
+    private static long canDeleteTime;
+
+    public static LocalDateTime getLikeablePersonModifyUnlockDate() {
+        return LocalDateTime.now().plusSeconds(canModifyTime);
+    }
 
 
     @Value("${custom.likeablePerson.from.max}")
     public void setLikeablePersonFromMax(long likeablePersonFromMax) {
         AppConfig.likeablePersonFromMax = likeablePersonFromMax;
     }
-//    @Value("${custom.canModifyHour.from.time}")
-//    public void setCanModifyHourTime(long CanModifyHourTime) {
-//        AppConfig.CanModifyHourTime = CanModifyHourTime;
-//    }
-//    @Value("${custom.canDeleteHour.from.time}")
-//    public void setCanDeleteHourTime(long CanDeleteHourTime) {
-//        AppConfig.CanDeleteHourTime = CanDeleteHourTime;
-//    }
+    @Value("${custom.likeablePerson.canModifyTime}")
+    public void setCanModifyTime(long canModifyTime) {
+        AppConfig.canModifyTime = canModifyTime;
+    }
+    @Value("${custom.likeablePerson.canDeleteTime}")
+    public void setCanDeleteTime(long canDeleteTime) {
+        AppConfig.canDeleteTime = canDeleteTime;
+    }
 
 }

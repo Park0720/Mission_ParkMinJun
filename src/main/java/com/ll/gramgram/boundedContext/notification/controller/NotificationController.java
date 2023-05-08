@@ -23,10 +23,13 @@ public class NotificationController {
     @PreAuthorize("isAuthenticated()")
     public String showList(Model model) {
         if (!rq.getMember().hasConnectedInstaMember()) {
-            return rq.redirectWithMsg("/usr/instaMember/connect", "먼저 본인의 인스타그램 아이디를 입력해주세요.");
+            return rq.redirectWithMsg("/usr/instaMember/connectByApi", "먼저 인스타그램 연동을 진행해주세요.");
         }
 
         List<Notification> notifications = notificationService.findByToInstaMember(rq.getMember().getInstaMember());
+
+        // 알림 페이지 방문 시에 ReadDate가 null인 것들 현재시각으로 갱신
+        notificationService.updateReadDate(notifications);
 
         model.addAttribute("notifications", notifications);
 

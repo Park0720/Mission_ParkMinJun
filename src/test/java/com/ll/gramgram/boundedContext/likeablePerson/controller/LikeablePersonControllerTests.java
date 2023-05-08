@@ -109,7 +109,7 @@ public class LikeablePersonControllerTests {
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
-                .andExpect(status().is3xxRedirection())
+                .andExpect(status().is4xxClientError())
         ;
     }
 
@@ -177,7 +177,7 @@ public class LikeablePersonControllerTests {
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("cancel"))
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().is3xxRedirection())
         //        .andExpect(redirectedUrlPattern("/usr/likeablePerson/list**"))
         ;
         // assertThat(likeablePersonService.getLikeablePerson((Long) 1L).isPresent()).isEqualTo(false);
@@ -276,7 +276,7 @@ public class LikeablePersonControllerTests {
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("like"))
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().is3xxRedirection())
         ;
         assertThat(likeablePersonService.findByFromInstaMemberIdAndToInstaMemberId((Long) 2L, (Long) 3L).get().getAttractiveTypeCode()==2);
     }
@@ -319,22 +319,22 @@ public class LikeablePersonControllerTests {
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("showModify"))
-                .andExpect(status().is4xxClientError())
-//                .andExpect(content().string(containsString("""
-//                        <input type="radio" name="attractiveTypeCode" value="1"
-//                        """.stripIndent().trim())))
-//                .andExpect(content().string(containsString("""
-//                        <input type="radio" name="attractiveTypeCode" value="2"
-//                        """.stripIndent().trim())))
-//                .andExpect(content().string(containsString("""
-//                        <input type="radio" name="attractiveTypeCode" value="3"
-//                        """.stripIndent().trim())))
-//                .andExpect(content().string(containsString("""
-//                        inputValue__attractiveTypeCode = 2;
-//                        """.stripIndent().trim())))
-//                .andExpect(content().string(containsString("""
-//                        id="btn-modify-like-1"
-//                        """.stripIndent().trim())))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().string(containsString("""
+                        <input type="radio" name="attractiveTypeCode" value="1"
+                        """.stripIndent().trim())))
+                .andExpect(content().string(containsString("""
+                        <input type="radio" name="attractiveTypeCode" value="2"
+                        """.stripIndent().trim())))
+                .andExpect(content().string(containsString("""
+                        <input type="radio" name="attractiveTypeCode" value="3"
+                        """.stripIndent().trim())))
+                .andExpect(content().string(containsString("""
+                        inputValue__attractiveTypeCode = 2;
+                        """.stripIndent().trim())))
+                .andExpect(content().string(containsString("""
+                        id="btn-modify-like-1"
+                        """.stripIndent().trim())))
         ;
     }
     @Test
@@ -354,7 +354,7 @@ public class LikeablePersonControllerTests {
         resultActions
                 .andExpect(handler().handlerType(LikeablePersonController.class))
                 .andExpect(handler().methodName("modify"))
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().is3xxRedirection())
         ;
     }
 }
