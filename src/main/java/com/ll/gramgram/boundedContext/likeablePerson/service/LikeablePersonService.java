@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -186,14 +187,14 @@ public class LikeablePersonService {
             case "M" -> {
                 filteredLikeablePerson = likeablePeople
                         .stream()
-                        .filter(x -> x.getFromInstaMember().getGender().equals("M"))
+                        .filter(x -> x.getGender().equals("M"))
                         .collect(Collectors.toList());
                 return filteredLikeablePerson;
             }
             case "W" -> {
                 filteredLikeablePerson = likeablePeople
                         .stream()
-                        .filter(x -> x.getFromInstaMember().getGender().equals("W"))
+                        .filter(x -> x.getGender().equals("W"))
                         .collect(Collectors.toList());
                 return filteredLikeablePerson;
             }
@@ -222,6 +223,57 @@ public class LikeablePersonService {
                 filteredLikeablePerson = likeablePeople
                         .stream()
                         .filter(x -> x.getAttractiveTypeCode() == 3)
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
+        }
+        return likeablePeople;
+    }
+
+    public List<LikeablePerson> filteringSortCode(List<LikeablePerson> likeablePeople, String sortCode) {
+        List<LikeablePerson> filteredLikeablePerson;
+        switch (sortCode) {
+            case "1" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .sorted(Comparator.comparing(LikeablePerson :: getCreateDate).reversed())
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
+            case "2" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .sorted(Comparator.comparing(LikeablePerson :: getCreateDate))
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
+            case "3" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .sorted(Comparator.comparing(LikeablePerson :: getPopularCount).reversed())
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
+            case "4" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .sorted(Comparator.comparing(LikeablePerson :: getPopularCount))
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
+            case "5" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .sorted(Comparator.comparing(LikeablePerson :: getGender).reversed())
+//                                .thenComparing(LikeablePerson :: getCreateDate).reversed())
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
+            case "6" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .sorted(Comparator.comparing(LikeablePerson :: getAttractiveTypeCode))
+//                                .thenComparing(LikeablePerson :: getCreateDate).reversed())
                         .collect(Collectors.toList());
                 return filteredLikeablePerson;
             }

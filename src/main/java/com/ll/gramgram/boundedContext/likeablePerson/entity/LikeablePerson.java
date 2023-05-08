@@ -51,6 +51,12 @@ public class LikeablePerson extends BaseEntity {
             default -> "능력";
         };
     }
+    public String getGender(){
+        return fromInstaMember.getGender();
+    }
+    public long getPopularCount(){
+        return fromInstaMember.getLikesCountByAttractionTypeCode1() + fromInstaMember.getLikesCountByAttractionTypeCode2() + fromInstaMember.getLikesCountByAttractionTypeCode3();
+    }
 
     public String getAttractiveTypeDisplayNameWithIcon() {
         return switch (attractiveTypeCode) {
