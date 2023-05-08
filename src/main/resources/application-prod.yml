@@ -9,15 +9,15 @@ spring:
       client:
         registration:
           naver:
-            redirect-uri: 'https://115.85.180.188/{action}/oauth2/code/{registrationId}'
+            redirect-uri: 'https://pmj.oa.gg/{action}/oauth2/code/{registrationId}'
           kakao:
-            redirect-uri: 'https://115.85.180.188/{action}/oauth2/code/{registrationId}'
+            redirect-uri: 'https://pmj.oa.gg/{action}/oauth2/code/{registrationId}'
           google:
-            redirect-uri: 'https://115.85.180.188/{action}/oauth2/code/{registrationId}'
+            redirect-uri: 'https://pmj.oa.gg/{action}/oauth2/code/{registrationId}'
           facebook:
-            redirect-uri: 'https://115.85.180.188/{action}/oauth2/code/{registrationId}'
+            redirect-uri: 'https://pmj.oa.gg/{action}/oauth2/code/{registrationId}'
           instagram:
-            redirect-uri: 'https://115.85.180.188/{action}/oauth2/code/{registrationId}'
+            redirect-uri: 'https://pmj.oa.gg/{action}/oauth2/code/{registrationId}'
   jpa:
     hibernate:
       ddl-auto: update
