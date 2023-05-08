@@ -155,7 +155,7 @@
 ---
 - 도메인을 `lifeadd.be`로 구매했으나 적용이 안돼서 강사님이 주신 `pmj.oa.gg` 도메인으로 진행
 ---
-**필수미션 - 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 성별 필터링기능 구현**
+**필수미션 - 내가 받은 호감리스트`(/usr/likeablePerson/toList)`에서 성별 필터링기능 구현**
 
 ---
 - `LikeablePerson` 에서 `Gender` 값 가져오려고 `getGender` 생성
@@ -165,14 +165,15 @@
 ---
 - 특이사항
 ---
-**선택미션 - 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 호감사유 필터링기능 구현**
+**선택미션 - 내가 받은 호감리스트`(/usr/likeablePerson/toList)`에서 호감사유 필터링기능 구현**
 
 ---
 - X
 ---
-**선택미션 - 내가 받은 호감리스트(/usr/likeablePerson/toList)에서 정렬기능**
+**선택미션 - 내가 받은 호감리스트`(/usr/likeablePerson/toList)`에서 정렬기능**
 
 ---
+- 인기순 정렬을 위해 `LikeablePerson` 에서 각 `attractiveTypeCode` 를 모두 더한 값 받아오려고 생성
 - 성별, 호감사유순 정렬할 때 기본적으로 최신순 정렬이 되는 것 같아서 성별, 호감사유 정렬만 구현함
 ---
 ### Refactoring
