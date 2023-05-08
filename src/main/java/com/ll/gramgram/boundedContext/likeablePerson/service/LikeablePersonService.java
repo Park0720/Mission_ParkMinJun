@@ -199,6 +199,7 @@ public class LikeablePersonService {
                 return filteredLikeablePerson;
             }
         }
+        // 아무것도 해당되지 않으면 필터링하지않고 반환
         return likeablePeople;
     }
 
@@ -227,6 +228,7 @@ public class LikeablePersonService {
                 return filteredLikeablePerson;
             }
         }
+        // 아무것도 해당되지 않으면 필터링하지않고 반환
         return likeablePeople;
     }
 
@@ -250,21 +252,21 @@ public class LikeablePersonService {
             case "3" -> {
                 filteredLikeablePerson = likeablePeople
                         .stream()
-                        .sorted(Comparator.comparing(LikeablePerson :: getPopularCount).reversed())
+                        .sorted(Comparator.comparing(LikeablePerson :: getPopularCount).reversed()) // Instamember의 각 typecode별 count를 더해서 정렬
                         .collect(Collectors.toList());
                 return filteredLikeablePerson;
             }
             case "4" -> {
                 filteredLikeablePerson = likeablePeople
                         .stream()
-                        .sorted(Comparator.comparing(LikeablePerson :: getPopularCount))
+                        .sorted(Comparator.comparing(LikeablePerson :: getPopularCount)) // Instamember의 각 typecode별 count를 더해서 정렬
                         .collect(Collectors.toList());
                 return filteredLikeablePerson;
             }
             case "5" -> {
                 filteredLikeablePerson = likeablePeople
                         .stream()
-                        .sorted(Comparator.comparing(LikeablePerson :: getGender).reversed())
+                        .sorted(Comparator.comparing(LikeablePerson :: getGender).reversed()) // 성별이 W, M 이기에 W 먼저 나오게 하려고 역순정렬
 //                                .thenComparing(LikeablePerson :: getCreateDate).reversed())
                         .collect(Collectors.toList());
                 return filteredLikeablePerson;
@@ -278,6 +280,7 @@ public class LikeablePersonService {
                 return filteredLikeablePerson;
             }
         }
+        // 아무것도 해당되지 않으면 필터링하지않고 반환
         return likeablePeople;
     }
 }

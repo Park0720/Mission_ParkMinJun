@@ -123,8 +123,11 @@ public class LikeablePersonController {
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
             List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+            // 성별로 필터링, url에 `gender=` 식으로 나옴
             List<LikeablePerson> filteringGenderLikeablePerson = likeablePersonService.filteringGender(likeablePeople, gender);
+            // 호감사유로 필터링, url에 `attractiveTypeCode=` 식으로 나옴
             List<LikeablePerson> filteringAttractiveTypeCodeLikeablePerson = likeablePersonService.filteringAttractiveTypeCode(filteringGenderLikeablePerson, attractiveTypeCode);
+            // 각 정렬기준으로 필터링, url에 `sortCode=` 식으로 나옴
             List<LikeablePerson> filteringSortCodeLikeablePerson = likeablePersonService.filteringSortCode(filteringAttractiveTypeCodeLikeablePerson, sortCode);
 
             model.addAttribute("likeablePeople", filteringSortCodeLikeablePerson);
