@@ -182,45 +182,49 @@ public class LikeablePersonService {
 
     public List<LikeablePerson> filteringGender(List<LikeablePerson> likeablePeople, String gender) {
         List<LikeablePerson> filteredLikeablePerson;
-        if (gender.equals("M")) {
-            filteredLikeablePerson = likeablePeople
-                    .stream()
-                    .filter(x -> x.getFromInstaMember().getGender().equals("M"))
-                    .collect(Collectors.toList());
-            return filteredLikeablePerson;
-        } else if (gender.equals("W")) {
-            filteredLikeablePerson = likeablePeople
-                    .stream()
-                    .filter(x -> x.getFromInstaMember().getGender().equals("W"))
-                    .collect(Collectors.toList());
-            return filteredLikeablePerson;
+        switch (gender) {
+            case "M" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .filter(x -> x.getFromInstaMember().getGender().equals("M"))
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
+            case "W" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .filter(x -> x.getFromInstaMember().getGender().equals("W"))
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
         }
         return likeablePeople;
     }
 
     public List<LikeablePerson> filteringAttractiveTypeCode(List<LikeablePerson> likeablePeople, String attractiveTypeCode) {
         List<LikeablePerson> filteredLikeablePerson;
-        if (attractiveTypeCode.equals("1")) {
-            filteredLikeablePerson = likeablePeople
-                    .stream()
-                    .filter(x -> x.getAttractiveTypeCode() == 1)
-                    .collect(Collectors.toList());
-            return filteredLikeablePerson;
-
-        } else if (attractiveTypeCode.equals("2")) {
-            filteredLikeablePerson = likeablePeople
-                    .stream()
-                    .filter(x -> x.getAttractiveTypeCode() == 2)
-                    .collect(Collectors.toList());
-
-            return filteredLikeablePerson;
-        } else if (attractiveTypeCode.equals("3")) {
-            filteredLikeablePerson = likeablePeople
-                    .stream()
-                    .filter(x -> x.getAttractiveTypeCode() == 3)
-                    .collect(Collectors.toList());
-            return filteredLikeablePerson;
-
+        switch (attractiveTypeCode) {
+            case "1" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .filter(x -> x.getAttractiveTypeCode() == 1)
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
+            case "2" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .filter(x -> x.getAttractiveTypeCode() == 2)
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
+            case "3" -> {
+                filteredLikeablePerson = likeablePeople
+                        .stream()
+                        .filter(x -> x.getAttractiveTypeCode() == 3)
+                        .collect(Collectors.toList());
+                return filteredLikeablePerson;
+            }
         }
         return likeablePeople;
     }
