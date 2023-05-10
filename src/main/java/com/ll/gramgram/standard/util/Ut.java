@@ -140,8 +140,8 @@ public class Ut {
             return url.substring(0, startPoint) + urlAfter;
         }
     }
-    public static LocalTime calDiffTime(LocalTime localTime1, LocalTime localTime2) {
-        Duration diff = Duration.between(localTime1, localTime2);
+    public static LocalTime calDiffTime(LocalDateTime localDateTime1, LocalDateTime localDateTime2) {
+        Duration diff = Duration.between(localDateTime1, localDateTime2);
         long hour = diff.toHours();
         long min = diff.toMinutes() - hour * 60;
         long sec = diff.toSeconds() - hour * 3600 - min * 60;

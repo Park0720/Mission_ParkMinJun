@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -123,7 +124,7 @@ public class LikeablePersonService {
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
         if(!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))) {
-            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(now(), likeablePerson.getModifyUnlockDate().toLocalTime())));
+            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(LocalDateTime.now(), likeablePerson.getModifyUnlockDate())));
         }
         return RsData.of("S-1", "수정 가능");
     }
@@ -138,7 +139,7 @@ public class LikeablePersonService {
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
         if(!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))) {
-            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(now(), likeablePerson.getModifyUnlockDate().toLocalTime())));
+            return RsData.of("F-4", "일정 시간 후 변경 가능합니다.\n변경 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(LocalDateTime.now(), likeablePerson.getModifyUnlockDate())));
         }
         // 호감사유 변경
         modifyAttractiveTypeCode(likeablePerson, attractiveTypeCode);
@@ -170,7 +171,7 @@ public class LikeablePersonService {
         }
         // ModifyDate를 가져와서 CanModifyHourTime이 지나지 않았으면 F-4 반환
         if (!now().isAfter(LocalTime.from(likeablePerson.getModifyUnlockDate()))){
-            return RsData.of("F-4", "일정 시간 후 삭제 가능합니다.\n삭제 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(now(), likeablePerson.getModifyUnlockDate().toLocalTime())));
+            return RsData.of("F-4", "일정 시간 후 삭제 가능합니다.\n삭제 가능까지 남은 시간 : %s".formatted(Ut.calDiffTime(LocalDateTime.now(), likeablePerson.getModifyUnlockDate())));
         }
         return RsData.of("S-1", "삭제 가능");
     }
