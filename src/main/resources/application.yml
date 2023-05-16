@@ -19,19 +19,19 @@ spring:
             scope:
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
           kakao:
             scope:
             client-name: Kakao
             authorization-grant-type: authorization_code
-            redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-authentication-method: POST
           google:
-            redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-name: Google
             scope: profile
           facebook:
-            redirect-uri: '${custom.site.baseUrl}/{action}/oauth2/code/{registrationId}'
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
             client-name: Facebook
             scope:
           instagram:
@@ -77,5 +77,3 @@ custom:
       max: 10
     canModifyTime: '#{60 * 60 * 3}'
     canDeleteTime: '#{60 * 60 * 3}'
-  site:
-    baseUrl: http://localhost
