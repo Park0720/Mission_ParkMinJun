@@ -1,5 +1,8 @@
 package com.ll.gramgram.standard.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,6 +16,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Map;
 
 public class Ut {
     public static class reflection {
@@ -186,4 +190,15 @@ public class Ut {
             return LocalTime.of((int) diffHours, (int) diffMinutes, (int) diffSeconds);
         }
     }
+    public static class json {
+
+        public static String toStr(Map map) {
+            try {
+                return new ObjectMapper().writeValueAsString(map);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    ;
 }

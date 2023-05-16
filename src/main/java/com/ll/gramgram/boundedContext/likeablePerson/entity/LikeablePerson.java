@@ -14,7 +14,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @SuperBuilder
 @NoArgsConstructor
@@ -51,6 +50,12 @@ public class LikeablePerson extends BaseEntity {
             case 2 -> "성격";
             default -> "능력";
         };
+    }
+    public String getGender(){
+        return fromInstaMember.getGender();
+    }
+    public long getPopularCount(){
+        return fromInstaMember.getLikesCountByAttractionTypeCode1() + fromInstaMember.getLikesCountByAttractionTypeCode2() + fromInstaMember.getLikesCountByAttractionTypeCode3();
     }
 
     public String getAttractiveTypeDisplayNameWithIcon() {
